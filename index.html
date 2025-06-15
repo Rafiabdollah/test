@@ -1,43 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MQTT Hello UI</title>
+  <title>MQTT Login</title>
   <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #dashboard { display: none; }
+  </style>
 </head>
 <body>
-  <h1 id="msg">Hello from MQTT Web UI</h1>
+
+  <h2>MQTT Web Login</h2>
+  
+  <div id="login">
+    <input type="text" id="username" placeholder="MQTT Username"><br><br>
+    <input type="password" id="password" placeholder="MQTT Password"><br><br>
+    <button onclick="connectMQTT()">Login & Connect</button>
+  </div>
+
+  <div id="dashboard">
+    <h3>Connected to MQTT!</h3>
+    <p id="mqttStatus">Waiting for messages...</p>
+  </div>
+
   <script>
-    // MQTT connection details
-    const broker = "wss://yourname.s2.eu.hivemq.cloud:8884/mqtt";
-    const clientID = "webclient_" + Math.random().toString(16).substr(2, 8);
-    const username = "yourHiveMQUser";
-    const password = "yourHiveMQPassword";
+    const broker = "1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud";
 
-    const client = new Paho.MQTT.Client(broker, clientID);
+    function connectMQTT() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const clientID = "web_" + Math.random().toString(16).substr(2, 8);
 
-    // Set callback handlers
-    client.onConnectionLost = function (responseObject) {
-      console.log("Connection lost:", responseObject.errorMessage);
-    };
+      const client = new Paho.MQTT.Client(broker, clientID);
 
-    client.onMessageArrived = function (message) {
-      console.log("Message received:", message.payloadString);
-      document.getElementById("msg").innerText = "Message: " + message.payloadString;
-    };
+      client.onConnectionLost = function(responseObject) {
+        console.log("Connection lost:", responseObject.errorMessage);
+        document.getElementById("mqttStatus").innerText = "Disconnected.";
+      };
 
-    // Connect to MQTT
-    client.connect({
-      useSSL: true,
-      userName: username,
-      password: password,
-      onSuccess: function () {
-        console.log("Connected to HiveMQ");
-        client.subscribe("vfd/hello");  // Example topic
-      },
-      onFailure: function (err) {
-        console.error("Connection failed:", err);
-      }
-    });
+      client.onMessageArrived = function(message) {
+        console.log("Message:", message.payloadString);
+        document.getElementById("mqttStatus").innerText = "Message: " + message.payloadString;
+      };
+
+      client.connect({
+        useSSL: true,
+        userName: username,
+        password: password,
+        onSuccess: () => {
+          console.log("MQTT connected");
+          document.getElementById("login").style.display = "none";
+          document.getElementById("dashboard").style.display = "block";
+
+          client.subscribe("vfd/hello");
+        },
+        onFailure: (err) => {
+          alert("Connection failed: " + err.errorMessage);
+        }
+      });
+    }
   </script>
 </body>
 </html>
