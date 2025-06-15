@@ -54,7 +54,7 @@
           document.getElementById("dashboard").style.display = "block";
 
           // Subscribe to a topic
-          client.subscribe("vfd/hello");
+          client.subscribe("vfd/status");
 
           // Send message after login
           const msg = new Paho.Message("Login successful!");
