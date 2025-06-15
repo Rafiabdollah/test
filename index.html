@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MQTT Hello UI</title>
+  <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+</head>
+<body>
+  <h1 id="msg">Hello from MQTT Web UI</h1>
+  <script>
+    // MQTT connection details
+    const broker = "wss://yourname.s2.eu.hivemq.cloud:8884/mqtt";
+    const clientID = "webclient_" + Math.random().toString(16).substr(2, 8);
+    const username = "yourHiveMQUser";
+    const password = "yourHiveMQPassword";
+
+    const client = new Paho.MQTT.Client(broker, clientID);
+
+    // Set callback handlers
+    client.onConnectionLost = function (responseObject) {
+      console.log("Connection lost:", responseObject.errorMessage);
+    };
+
+    client.onMessageArrived = function (message) {
+      console.log("Message received:", message.payloadString);
+      document.getElementById("msg").innerText = "Message: " + message.payloadString;
+    };
+
+    // Connect to MQTT
+    client.connect({
+      useSSL: true,
+      userName: username,
+      password: password,
+      onSuccess: function () {
+        console.log("Connected to HiveMQ");
+        client.subscribe("vfd/hello");  // Example topic
+      },
+      onFailure: function (err) {
+        console.error("Connection failed:", err);
+      }
+    });
+  </script>
+</body>
+</html>
