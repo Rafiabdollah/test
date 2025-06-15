@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MQTT Login</title>
-  <!-- ✅ Load Paho MQTT library first -->
+  <title>MQTT Login Test</title>
+
+  <!-- ✅ LOAD THIS FIRST -->
   <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
 </head>
 <body>
@@ -19,8 +20,9 @@
     <p id="mqttStatus">Waiting for messages...</p>
   </div>
 
+  <!-- ✅ THIS SCRIPT COMES AFTER PAHO LIBRARY -->
   <script>
-    const broker = "wss://YOUR-HIVEMQ-ID.s2.eu.hivemq.cloud:8884/mqtt"; // Replace this
+    const broker = "wss://YOUR-BROKER.s2.eu.hivemq.cloud:8884/mqtt"; // Replace with your actual HiveMQ broker
 
     function connectMQTT() {
       const username = document.getElementById("username").value;
@@ -29,11 +31,11 @@
 
       const client = new Paho.MQTT.Client(broker, clientID);
 
-      client.onConnectionLost = function(responseObject) {
-        console.log("Disconnected:", responseObject.errorMessage);
+      client.onConnectionLost = function (responseObject) {
+        console.log("Connection lost:", responseObject.errorMessage);
       };
 
-      client.onMessageArrived = function(message) {
+      client.onMessageArrived = function (message) {
         document.getElementById("mqttStatus").innerText = "Message: " + message.payloadString;
       };
 
@@ -42,13 +44,13 @@
         userName: username,
         password: password,
         onSuccess: () => {
-          console.log("Connected");
+          console.log("Connected to MQTT!");
           document.getElementById("login").style.display = "none";
           document.getElementById("dashboard").style.display = "block";
           client.subscribe("vfd/hello");
         },
         onFailure: (err) => {
-          alert("Connection failed: " + err.errorMessage);
+          alert("Failed to connect: " + err.errorMessage);
         }
       });
     }
