@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MQTT Device Panel</title>
+  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
+</head>
+<body>
+  <h2>Device: Publish Data</h2>
+
+  <label>Temperature (°C):</label><br>
+  <input type="number" id="tempInput"><br><br>
+
+  <label>Speed (RPM):</label><br>
+  <input type="number" id="speedInput"><br><br>
+
+  <label>Status:</label><br>
+  <input type="text" id="statusInput"><br><br>
+
+  <button onclick="publishData()">Send Data</button>
+
+  <script>
+    const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
+    const username = sessionStorage.getItem("mqttUsername");
+    const password = sessionStorage.getItem("mqttPassword");
+    const clientID = "device_" + Math.random().toString(16).substr(2, 8);
+    const client = new Paho.Client(broker, clientID);
+
+    client.connect({
+      useSSL: true,
+      userName: username,
+      password: password,
+      onSuccess: () => console.log("Connected to MQTT as Device"),
+      onFailure: (err) => alert("MQTT connection failed: " + err.errorMessage),
+    });
+
+    function publishData() {
+      const temp = document.getElementById("tempInput").value;
+      const speed = document.getElementById("speedInput").value;
+      const status = document.getElementById("statusInput").value;
+
+      if (temp) client.send(new Paho.Message(temp).destinationName = "vfd/temperature");
+      if (speed) client.send(new Paho.Message(speed).destinationName = "vfd/speed");
+      if (status) client.send(new Paho.Message(status).destinationName = "vfd/status");
+
+      alert("Data sent!");
+    }
+  </script>
+</body>
+</html>
