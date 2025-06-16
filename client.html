@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MQTT Client Dashboard</title>
+  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .data-block {
+      margin-bottom: 20px;
+    }
+    .label {
+      font-weight: bold;
+      color: #34495e;
+    }
+    .value {
+      font-size: 1.4em;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <h2>📊 Client Dashboard</h2>
+
+  <div class="data-block">
+    <div class="label">Temperature (°C):</div>
+    <div class="value" id="tempValue">--</div>
+  </div>
+
+  <div class="data-block">
+    <div class="label">Speed (RPM):</div>
+    <div class="value" id="speedValue">--</div>
+  </div>
+
+  <div class="data-block">
+    <div class="label">Status:</div>
+    <div class="value" id="statusValue">--</div>
+  </div>
+
+  <script>
+    const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
+    const username = sessionStorage.getItem("mqttUsername");
+    const password = sessionStorage.getItem("mqttPassword");
+
+    if (!username || !password) {
+      alert("No login info found. Please log in first.");
+      window.location.href = "index.html";
+    }
+
+    const clientID = "client_" + Math.random().toString(16).substr(2, 8);
+    const client = new Paho.Client(broker, clientID);
+
+    client.onConnectionLost = function (responseObject) {
+      console.error("Connection lost:", responseObject.errorMessage);
+      alert("MQTT connection lost.");
+    };
+
+    client.onMessageArrived = function (message) {
+      const topic = message.destinationName;
+      const payload = message.payloadString;
+
+      if (topic === "vfd/temperature") {
+        document.getElementById("tempValue").innerText = payload;
+      } else if (topic === "vfd/speed") {
+        document.getElementById("speedValue").innerText = payload;
+      } else if (topic === "vfd/status") {
+        document.getElementById("statusValue").innerText = payload;
+      }
+
+      console.log("Received message:", topic, payload);
+    };
+
+    client.connect({
+      useSSL: true,
+      userName: username,
+      password: password,
+      onSuccess: () => {
+        console.log("Connected to broker as client");
+        client.subscribe("vfd/temperature");
+        client.subscribe("vfd/speed");
+        client.subscribe("vfd/status");
+      },
+      onFailure: (err) => {
+        console.error("MQTT connection failed:", err.errorMessage);
+        alert("Failed to connect: " + err.errorMessage);
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>
