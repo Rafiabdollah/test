@@ -33,31 +33,31 @@
       onFailure: (err) => alert("MQTT connection failed: " + err.errorMessage),
     });
 
-    function publishData() {
-      const temp = document.getElementById("tempInput").value;
-      const speed = document.getElementById("speedInput").value;
-      const status = document.getElementById("statusInput").value;
+function publishData() {
+  const temp = document.getElementById("tempInput").value;
+  const speed = document.getElementById("speedInput").value;
+  const status = document.getElementById("statusInput").value;
 
-      if (temp) {
-        const tempMsg = new Paho.MQTT.Message(temp);
-        tempMsg.destinationName = "vfd/temperature";
-        client.send(tempMsg);
-      }
+  if (temp) {
+    const tempMsg = new Paho.Message(temp);
+    tempMsg.destinationName = "vfd/temperature";
+    client.send(tempMsg);
+  }
 
-      if (speed) {
-        const speedMsg = new Paho.MQTT.Message(speed);
-        speedMsg.destinationName = "vfd/speed";
-        client.send(speedMsg);
-      }
+  if (speed) {
+    const speedMsg = new Paho.Message(speed);
+    speedMsg.destinationName = "vfd/speed";
+    client.send(speedMsg);
+  }
 
-      if (status) {
-        const statusMsg = new Paho.MQTT.Message(status);
-        statusMsg.destinationName = "vfd/status";
-        client.send(statusMsg);
-      }
+  if (status) {
+    const statusMsg = new Paho.Message(status);
+    statusMsg.destinationName = "vfd/status";
+    client.send(statusMsg);
+  }
 
-      alert("Data sent!");
-    }
+  alert("Data sent!");
+}
   </script>
 </body>
 </html>
