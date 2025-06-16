@@ -1,90 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>MQTT Dashboard</title>
-  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
+  <title>MQTT Role Login</title>
 </head>
 <body>
-  <h2>MQTT Login</h2>
-
-  <div id="login">
-    <input type="text" id="username" placeholder="MQTT Username" /><br /><br />
-    <input type="password" id="password" placeholder="MQTT Password" /><br /><br />
-    <button onclick="connectMQTT()">Login & Connect</button>
-  </div>
-
-  <div id="dashboard" style="display: none">
-    <h3>Connected to MQTT!</h3>
-
-    <!-- Live data display -->
-    <p>Temperature: <span id="temperature">--</span> °C</p>
-    <p>Speed: <span id="speed">--</span> RPM</p>
-    <p>Status: <span id="mqttStatus">Waiting for messages...</span></p>
-
-    <!-- Manual publish -->
-    <input type="text" id="customMsg" placeholder="Enter message">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+  <h2>Login to MQTT</h2>
+  <input type="text" id="username" placeholder="Username"><br><br>
+  <input type="password" id="password" placeholder="Password"><br><br>
+  <button onclick="handleLogin()">Login</button>
 
   <script>
-    const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
-    let client;
-
-    function connectMQTT() {
-      const username = document.getElementById("username").value;
+    function handleLogin() {
+      const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value;
-      const clientID = "web_" + Math.random().toString(16).substr(2, 8);
 
-      client = new Paho.Client(broker, clientID);
+      if (!username || !password) {
+        alert("Please enter both username and password");
+        return;
+      }
 
-      client.onConnectionLost = function (responseObject) {
-        console.log("Connection lost:", responseObject.errorMessage);
-      };
+      // Save credentials for later use in session
+      sessionStorage.setItem("mqttUsername", username);
+      sessionStorage.setItem("mqttPassword", password);
 
-      client.onMessageArrived = function (message) {
-        console.log("Message received:", message.destinationName, message.payloadString);
-
-        if (message.destinationName === "vfd/temperature") {
-          document.getElementById("temperature").innerText = message.payloadString;
-        } else if (message.destinationName === "vfd/speed") {
-          document.getElementById("speed").innerText = message.payloadString;
-        } else {
-          // Fallback for any other message
-          document.getElementById("mqttStatus").innerText = message.payloadString;
-        }
-      };
-
-      client.connect({
-        useSSL: true,
-        userName: username,
-        password: password,
-        onSuccess: () => {
-          console.log("Connected!");
-          document.getElementById("login").style.display = "none";
-          document.getElementById("dashboard").style.display = "block";
-
-          // Subscribe to all relevant topics
-          client.subscribe("vfd/temperature");
-          client.subscribe("vfd/speed");
-          client.subscribe("vfd/status");
-
-          // Send login confirmation
-          const msg = new Paho.Message("Login successful!");
-          msg.destinationName = "vfd/status";
-          client.send(msg);
-        },
-        onFailure: (err) => {
-          alert("Failed to connect: " + err.errorMessage);
-        },
-      });
-    }
-
-    function sendMessage() {
-      const text = document.getElementById("customMsg").value;
-      const message = new Paho.Message(text);
-      message.destinationName = "vfd/status";
-      client.send(message);
+      // Redirect based on role
+      if (username.toLowerCase().startsWith("admin")) {
+        window.location.href = "client.html";
+      } else if (username.toLowerCase().startsWith("device")) {
+        window.location.href = "device.html";
+      } else {
+        alert("Unknown role. Use 'admin' or 'device' prefix.");
+      }
     }
   </script>
 </body>
