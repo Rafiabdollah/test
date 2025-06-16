@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>MQTT Device Panel</title>
-  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
 </head>
 <body>
   <h2>Device: Publish Data</h2>
@@ -33,31 +33,31 @@
       onFailure: (err) => alert("MQTT connection failed: " + err.errorMessage),
     });
 
-function publishData() {
-  const temp = document.getElementById("tempInput").value;
-  const speed = document.getElementById("speedInput").value;
-  const status = document.getElementById("statusInput").value;
+    function publishData() {
+      const temp = document.getElementById("tempInput").value;
+      const speed = document.getElementById("speedInput").value;
+      const status = document.getElementById("statusInput").value;
 
-  if (temp) {
-    const tempMsg = new Paho.Message(temp);
-    tempMsg.destinationName = "vfd/temperature";
-    client.send(tempMsg);
-  }
+      if (temp) {
+        const msg = new Paho.Message(temp);
+        msg.destinationName = "vfd/temperature";
+        client.send(msg);
+      }
 
-  if (speed) {
-    const speedMsg = new Paho.Message(speed);
-    speedMsg.destinationName = "vfd/speed";
-    client.send(speedMsg);
-  }
+      if (speed) {
+        const msg = new Paho.Message(speed);
+        msg.destinationName = "vfd/speed";
+        client.send(msg);
+      }
 
-  if (status) {
-    const statusMsg = new Paho.Message(status);
-    statusMsg.destinationName = "vfd/status";
-    client.send(statusMsg);
-  }
+      if (status) {
+        const msg = new Paho.Message(status);
+        msg.destinationName = "vfd/status";
+        client.send(msg);
+      }
 
-  alert("Data sent!");
-}
+      alert("Data sent!");
+    }
   </script>
 </body>
 </html>
