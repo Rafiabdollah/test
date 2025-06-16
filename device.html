@@ -6,58 +6,46 @@
 </head>
 <body>
   <h2>Device: Publish Data</h2>
-
-  <label>Temperature (°C):</label><br>
-  <input type="number" id="tempInput"><br><br>
-
-  <label>Speed (RPM):</label><br>
-  <input type="number" id="speedInput"><br><br>
-
-  <label>Status:</label><br>
-  <input type="text" id="statusInput"><br><br>
-
+  Temperature: <input type="number" id="tempInput"><br><br>
+  Speed: <input type="number" id="speedInput"><br><br>
+  Status: <input type="text" id="statusInput"><br><br>
   <button onclick="publishData()">Send Data</button>
 
   <script>
-    const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
-    const username = sessionStorage.getItem("mqttUsername");
-    const password = sessionStorage.getItem("mqttPassword");
-    const clientID = "device_" + Math.random().toString(16).substr(2, 8);
-    const client = new Paho.Client(broker, clientID);
+    window.onload = function() {
+      const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
+      const username = sessionStorage.getItem("mqttUsername");
+      const password = sessionStorage.getItem("mqttPassword");
+      const clientID = "device_" + Math.random().toString(16).substr(2, 8);
+      const client = new Paho.Client(broker, clientID);
 
-    client.connect({
-      useSSL: true,
-      userName: username,
-      password: password,
-      onSuccess: () => console.log("Connected to MQTT as Device"),
-      onFailure: (err) => alert("MQTT connection failed: " + err.errorMessage),
-    });
+      client.connect({
+        useSSL: true,
+        userName: username,
+        password: password,
+        onSuccess: () => console.log("Connected to MQTT as Device"),
+        onFailure: err => alert("MQTT error: " + err.errorMessage)
+      });
 
-    function publishData() {
-      const temp = document.getElementById("tempInput").value;
-      const speed = document.getElementById("speedInput").value;
-      const status = document.getElementById("statusInput").value;
+      window.publishData = function() {
+        if (!client.isConnected()) return alert("Not connected");
 
-      if (temp) {
-        const msg = new Paho.Message(temp);
-        msg.destinationName = "vfd/temperature";
-        client.send(msg);
-      }
+        const toSend = [
+          { val: document.getElementById("tempInput").value, topic: "vfd/temperature" },
+          { val: document.getElementById("speedInput").value, topic: "vfd/speed" },
+          { val: document.getElementById("statusInput").value, topic: "vfd/status" }
+        ];
 
-      if (speed) {
-        const msg = new Paho.Message(speed);
-        msg.destinationName = "vfd/speed";
-        client.send(msg);
-      }
-
-      if (status) {
-        const msg = new Paho.Message(status);
-        msg.destinationName = "vfd/status";
-        client.send(msg);
-      }
-
-      alert("Data sent!");
-    }
+        toSend.forEach(item => {
+          if (item.val) {
+            const msg = new Paho.Message(item.val);
+            msg.destinationName = item.topic;
+            client.send(msg);
+          }
+        });
+        alert("Data sent!");
+      };
+    };
   </script>
 </body>
 </html>
