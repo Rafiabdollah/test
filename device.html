@@ -38,9 +38,23 @@
       const speed = document.getElementById("speedInput").value;
       const status = document.getElementById("statusInput").value;
 
-      if (temp) client.send(new Paho.Message(temp).destinationName = "vfd/temperature");
-      if (speed) client.send(new Paho.Message(speed).destinationName = "vfd/speed");
-      if (status) client.send(new Paho.Message(status).destinationName = "vfd/status");
+      if (temp) {
+        const tempMsg = new Paho.MQTT.Message(temp);
+        tempMsg.destinationName = "vfd/temperature";
+        client.send(tempMsg);
+      }
+
+      if (speed) {
+        const speedMsg = new Paho.MQTT.Message(speed);
+        speedMsg.destinationName = "vfd/speed";
+        client.send(speedMsg);
+      }
+
+      if (status) {
+        const statusMsg = new Paho.MQTT.Message(status);
+        statusMsg.destinationName = "vfd/status";
+        client.send(statusMsg);
+      }
 
       alert("Data sent!");
     }
