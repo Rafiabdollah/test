@@ -10,7 +10,8 @@
   Speed (RPM): <input type="number" id="speedInput"><br><br>
   Status: <input type="text" id="statusInput"><br><br>
   <button onclick="publishData()">Send Data</button>
-
+  <p>Temperature: <span id="temperature">--</span> °C</p>
+  
   <script>
     window.onload = function() {
       const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
