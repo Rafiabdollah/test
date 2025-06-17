@@ -3,30 +3,9 @@
 <head>
   <title>MQTT Device Panel</title>
   <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    input {
-      width: 100px;
-    }
-    #allMessages {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background: #f8f8f8;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    p {
-      margin: 5px 0;
-      font-size: 14px;
-    }
-  </style>
 </head>
 <body>
-  <h2>Device: Publish Data</h2>
+  <h2>Device: Publish & Monitor</h2>
 
   <label>Temperature (°C):</label><br>
   <input type="number" id="tempInput"><br><br>
@@ -39,10 +18,8 @@
 
   <button onclick="publishData()">Send Data</button>
 
-  <h3>All Incoming MQTT Messages</h3>
-  <div id="allMessages">
-    <p>Waiting for messages...</p>
-  </div>
+  <h3>Received MQTT Messages:</h3>
+  <div id="messageLog" style="border:1px solid #ccc; padding:10px; height:150px; overflow:auto;"></div>
 
   <script>
     const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
@@ -52,18 +29,15 @@
 
     const client = new Paho.MQTT.Client(broker, clientID);
 
-    client.onConnectionLost = function (responseObject) {
-      console.log("Connection lost:", responseObject.errorMessage);
+    client.onConnectionLost = (response) => {
+      console.error("Connection lost:", response.errorMessage);
     };
 
-    client.onMessageArrived = function (message) {
-      const topic = message.destinationName;
-      const payload = message.payloadString;
-      console.log("Incoming message:", topic, payload);
-
-      const messageElement = document.createElement("p");
-      messageElement.textContent = `📩 Topic: ${topic} — Message: ${payload}`;
-      document.getElementById("allMessages").prepend(messageElement);
+    client.onMessageArrived = (message) => {
+      const log = document.getElementById("messageLog");
+      const time = new Date().toLocaleTimeString();
+      log.innerHTML += `<p><strong>[${time}]</strong> ${message.destinationName}: ${message.payloadString}</p>`;
+      log.scrollTop = log.scrollHeight;
     };
 
     client.connect({
@@ -72,11 +46,9 @@
       password: password,
       onSuccess: () => {
         console.log("Connected to MQTT as Device");
-        client.subscribe("vfd/#"); // Subscribe to all topics under "vfd/"
+        client.subscribe("#"); // Subscribe to all topics
       },
-      onFailure: (err) => {
-        alert("MQTT connection failed: " + err.errorMessage);
-      },
+      onFailure: (err) => alert("MQTT connection failed: " + err.errorMessage),
     });
 
     function publishData() {
