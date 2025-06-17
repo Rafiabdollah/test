@@ -10,9 +10,8 @@
   Speed (RPM): <input type="number" id="speedInput"><br><br>
   Status: <input type="text" id="statusInput"><br><br>
   <button onclick="publishData()">Send Data</button>
-  <p>Temperature: <span id="temperature">--</span> °C</p>
-  <p>Speed: <span id="speed">--</span> RPM</p>
-  <p>Status: <span id="status">--</span></p>
+  <p>MESSAGE: <span id="MESSAGE">--</span> °C</p>
+
 
   
   <script>
@@ -44,11 +43,11 @@
         const payload = message.payloadString;
 
         if (topic === "vfd/temperature") {
-          document.getElementById("temperature").innerText = payload;
+          document.getElementById("MESSAGE").innerText = payload;
         } else if (topic === "vfd/speed") {
-          document.getElementById("speed").innerText = payload;
+          document.getElementById("MESSAGE").innerText = payload;
         } else if (topic === "vfd/status") {
-          document.getElementById("status").innerText = payload;
+          document.getElementById("MESSAGE").innerText = payload;
         }
       };
         const toSend = [
