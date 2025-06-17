@@ -30,7 +30,19 @@
 
       window.publishData = function() {
         if (!client.isConnected()) return alert("Not connected");
+        
+      client.onMessageArrived = function (message) {
+        const topic = message.destinationName;
+        const payload = message.payloadString;
 
+        if (topic === "vfd/temperature") {
+          document.getElementById("temperature").innerText = payload;
+        } else if (topic === "vfd/speed") {
+          document.getElementById("speed").innerText = payload;
+        } else if (topic === "vfd/status") {
+          document.getElementById("status").innerText = payload;
+        }
+      };
         const toSend = [
           { val: document.getElementById("tempInput").value, topic: "vfd/temperature" },
           { val: document.getElementById("speedInput").value, topic: "vfd/speed" },
