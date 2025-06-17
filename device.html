@@ -27,7 +27,12 @@
         useSSL: true,
         userName: username,
         password: password,
-        onSuccess: () => console.log("Connected to MQTT as Device"),
+        onSuccess: function () {
+          console.log("Connected to MQTT broker as Client");
+          client.subscribe("vfd/temperature");
+          client.subscribe("vfd/speed");
+          client.subscribe("vfd/status");
+        },
         onFailure: err => alert("MQTT error: " + err.errorMessage)
       });
 
