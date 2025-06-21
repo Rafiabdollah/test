@@ -1035,7 +1035,18 @@
               if (key === "alertes" && payload !== "Aucune") {
                 showAlert(`⚠️ ${payload}`, "alert-danger");
               }
-              
+              if (key === "batterie") {
+                document.getElementById("battery-fill").style.width = payload + "%";
+                document.getElementById("battery-fill").textContent = payload + "%";
+              }
+              if (key === "ensoleillement") {
+                document.getElementById("solar-fill").style.width = payload + "%";
+                document.getElementById("solar-fill").textContent = payload + "%";
+              }
+              if (key === "niveauEau") {
+               document.getElementById("water-fill").style.width = payload + "%";
+               document.getElementById("water-fill").textContent = payload + "%";
+              }
               // Handle schedule updates
               if (key === "schedule") {
                 try {
