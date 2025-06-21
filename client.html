@@ -58,13 +58,13 @@
   <div id="log">📡 Waiting for MQTT messages...</div>
 <hr><br>
 
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDetails()">📊 Voir les données avancées</h3>
-
-<div id="detailsPanel" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesÉlectriques()">📊 Voir les données Électriques</h3>
+<div id="DonnéesÉlectriques" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
     <p>🌡️ Temperature: <span id="temperature">--</span> °C</p>
     <p>⚙️ Speed: <span id="speed">--</span> RPM</p>
     <p>🔌 Status: <span id="status">--</span></p>
 </div>
+  
   <script>
     window.onload = function () {
       const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
@@ -132,8 +132,8 @@
         logDiv.textContent = text + "\n" + logDiv.textContent;
       }
     };
-    function toggleDetails() {
-  const panel = document.getElementById("detailsPanel");
+    function toggleDonnéesÉlectriques() {
+  const panel = document.getElementById("DonnéesÉlectriques");
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
   </script>
