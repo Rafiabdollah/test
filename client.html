@@ -842,6 +842,7 @@
       
       slider.addEventListener('input', function() {
         valueDisplay.textContent = this.value + '%';
+        sendMotorCommand('speed:' + this.value);
       });
       
       // Add flash animation for emergency button
