@@ -757,7 +757,36 @@
       </div>
       <div id="log">📡 En attente de données MQTT...</div>
     </div>
-
+   <!-- System Stats Card -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-chart-bar"></i>
+        <h2>Statistiques du Système</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-sun" style="color: gold; font-size: 2rem;"></i>
+          <div class="stat-value" id="puissance-value">--</div>
+          <div class="stat-label">Production Solaire</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-bolt" style="color: orange; font-size: 2rem;"></i>
+          <div class="stat-value" id="consommation-value">--</div>
+          <div class="stat-label">Consommation</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-tint" style="color: blue; font-size: 2rem;"></i>
+          <div class="stat-value" id="debit-value">--</div>
+          <div class="stat-label">Débit d'eau</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-clock" style="color: purple; font-size: 2rem;"></i>
+          <div class="stat-value" id="heures-value">--</div>
+          <div class="stat-label">Heures de fonctionnement</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Configuration MQTT
