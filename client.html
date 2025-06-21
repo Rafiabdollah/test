@@ -55,8 +55,7 @@
   <button onclick="sendMotorCommand('on')">Start Motor</button>
   <button onclick="sendMotorCommand('off')">Stop Motor</button>
 
-  <div id="log">📡 Waiting for MQTT messages...</div>
-<hr><br>
+
 
 <h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesÉlectriques()">📊 Voir les données Électriques</h3>
 <div id="DonnéesÉlectriques" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
@@ -98,6 +97,8 @@
     <p> État de la connexion réseau  : <span id="Tension">--</span>  H</p>
     <p> Latence des données : <span id="Puissance">--</span></p>
     <p> Statut des mises à jour logicielles : <span id="batterie">--</span></p>
+    <div id="log">📡 Waiting for MQTT messages...</div>
+<hr><br>
 </div> 
   
   <script>
