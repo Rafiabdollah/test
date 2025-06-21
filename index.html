@@ -3,137 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAFI ROBOTIQUE IOT Login</title>
+  <title>RAFI ROBOTIQUE | Solar IoT Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary-color: #3498db;
-      --primary-dark: #2980b9;
-      --text-color: #2c3e50;
-      --light-gray: #f0f2f5;
-      --border-color: #ddd;
-      --error-color: #e74c3c;
-      --success-color: #2ecc71;
+      --solar-yellow: #F9D71C;
+      --solar-orange: #FFA630;
+      --eco-green: #4CAF50;
+      --sky-blue: #87CEEB;
+      --earth-brown: #8B4513;
+      --text-dark: #2C3E50;
+      --text-light: #F8F9FA;
+      --card-bg: rgba(255, 255, 255, 0.9);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', 'Open Sans', sans-serif;
     }
 
     body {
-      background: var(--light-gray);
-      color: var(--text-color);
-      line-height: 1.6;
-      padding: 20px;
+      background: linear-gradient(135deg, var(--sky-blue), #E0F7FA);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .container {
-      max-width: 1000px;
+    /* Solar panel background effect */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(45deg, 
+          transparent 48%, 
+          var(--solar-yellow) 48%, 
+          var(--solar-yellow) 52%, 
+          transparent 52%),
+        linear-gradient(-45deg, 
+          transparent 48%, 
+          var(--solar-yellow) 48%, 
+          var(--solar-yellow) 52%, 
+          transparent 52%);
+      background-size: 30px 30px;
+      opacity: 0.1;
+      z-index: -1;
     }
 
-    .login-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    .login-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       padding: 40px;
+      width: 100%;
       max-width: 450px;
-      margin: 0 auto;
       text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
     }
 
     .logo {
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      font-size: 3.5rem;
+      color: var(--solar-orange);
+      background: radial-gradient(circle, var(--solar-yellow) 30%, transparent 70%);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 0 20px rgba(249, 215, 28, 0.3);
     }
 
     h1 {
-      font-size: 1.8rem;
-      color: var(--primary-color);
-      margin-bottom: 25px;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 10px;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .tagline {
+      color: var(--eco-green);
+      margin-bottom: 30px;
+      font-weight: 500;
+      font-size: 1.1rem;
     }
 
     .input-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       text-align: left;
     }
 
     label {
       display: block;
       margin-bottom: 8px;
-      font-weight: 500;
+      color: var(--text-dark);
+      font-weight: 600;
     }
 
     input {
       width: 100%;
-      padding: 12px 15px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
       font-size: 16px;
       transition: all 0.3s;
+      background-color: rgba(255, 255, 255, 0.8);
     }
 
     input:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      border-color: var(--eco-green);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
     }
 
-    button {
+    .btn-login {
       width: 100%;
-      padding: 14px;
-      background-color: var(--primary-color);
+      padding: 15px;
+      background: linear-gradient(to right, var(--eco-green), #66BB6A);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
-      margin-top: 20px;
+      margin-top: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    button:hover {
-      background-color: var(--primary-dark);
+    .btn-login:hover {
+      background: linear-gradient(to right, #43A047, var(--eco-green));
       transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
 
     .note {
       font-size: 0.9rem;
-      color: #666;
+      color: var(--text-dark);
       margin-top: 25px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
-    .code {
-      background: var(--light-gray);
-      padding: 2px 5px;
-      border-radius: 3px;
+    .access-code {
+      display: inline-block;
+      background-color: var(--solar-yellow);
+      color: var(--text-dark);
+      padding: 3px 8px;
+      border-radius: 4px;
       font-family: monospace;
+      font-weight: bold;
+      margin: 0 2px;
     }
 
     .error-message {
-      color: var(--error-color);
+      color: #e74c3c;
       font-size: 0.85rem;
       margin-top: 5px;
       display: none;
     }
 
-    .highlight {
-      background-color: rgba(52, 152, 219, 0.1);
-      padding: 2px 5px;
-      border-radius: 3px;
-      font-weight: 600;
+    /* Solar panel animation */
+    .solar-panel {
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: 
+        linear-gradient(45deg, 
+          transparent 48%, 
+          var(--solar-yellow) 48%, 
+          var(--solar-yellow) 52%, 
+          transparent 52%),
+        linear-gradient(-45deg, 
+          transparent 48%, 
+          var(--solar-yellow) 48%, 
+          var(--solar-yellow) 52%, 
+          transparent 52%);
+      background-size: 30px 30px;
+      opacity: 0.2;
+      transform: rotate(15deg);
+      z-index: -1;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 30px;
+      }
+      
+      .logo-icon {
+        font-size: 2.5rem;
+        width: 60px;
+        height: 60px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .solar-panel {
+        display: none;
+      }
     }
 
     /* Loading animation */
@@ -145,53 +241,47 @@
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
-      margin: 0 auto;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    @media (max-width: 768px) {
-      .login-card {
-        padding: 30px;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="login-card">
-      <div class="logo"><i class="fas fa-lock"></i></div>
-      <h1>RAFI ROBOTIQUE IOT <span class="highlight">Login</span></h1>
-      
-      <div class="input-group">
-        <label for="username">MQTT Username</label>
-        <input type="text" id="username" placeholder="admin1 or ESP32-001" autocomplete="username" />
-        <div id="username-error" class="error-message">Username is required</div>
-      </div>
-      
-      <div class="input-group">
-        <label for="password">MQTT Password</label>
-        <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" />
-        <div id="password-error" class="error-message">Password is required</div>
-      </div>
-      
-      <button onclick="handleLogin()" id="login-btn">
-        <span id="btn-text">Login</span>
-        <span id="btn-spinner" class="spinner"></span>
-      </button>
-      
-      <div class="note">
-        <p><strong>Access Instructions:</strong></p>
-        <p>Use prefix <span class="code">admin</span> for client access (e.g., admin1, admin2)</p>
-        <p>Use prefix <span class="code">ESP32</span> for device access (e.g., ESP32-001, ESP32-002)</p>
+  <div class="solar-panel"></div>
+  
+  <div class="login-container">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-solar-panel"></i>
       </div>
     </div>
+    
+    <h1>SOLAR IOT CONTROL PANEL</h1>
+    <p class="tagline">Renewable Energy Management System</p>
+    
+    <div class="input-group">
+      <label for="username"><i class="fas fa-user"></i> MQTT Username</label>
+      <input type="text" id="username" placeholder="admin1 or ESP32-001" autocomplete="username" />
+      <div id="username-error" class="error-message">Username is required</div>
+    </div>
+    
+    <div class="input-group">
+      <label for="password"><i class="fas fa-lock"></i> MQTT Password</label>
+      <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" />
+      <div id="password-error" class="error-message">Password is required</div>
+    </div>
+    
+    <button class="btn-login" onclick="handleLogin()" id="login-btn">
+      <span id="btn-text">Connect to Solar Network</span>
+      <span id="btn-spinner" class="spinner"></span>
+    </button>
+    
+    <p class="note">
+      Use prefix <span class="access-code">admin</span> for control panel access<br>
+      Use prefix <span class="access-code">ESP32</span> for solar device access
+    </p>
   </div>
 
   <script>
