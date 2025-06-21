@@ -56,7 +56,60 @@
   <button onclick="sendMotorCommand('off')">Stop Motor</button>
 
   <div id="log">📡 Waiting for MQTT messages...</div>
+<hr><br>
 
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDetails()">📊 Voir les données avancées</h3>
+
+<div id="detailsPanel" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+  <h4>1. Données Électriques</h4>
+  <ul>
+    <li>Tension et courant (entrée/sortie du panneau solaire, batterie, pompe)</li>
+    <li>Puissance générée par les panneaux solaires</li>
+    <li>État de la batterie (niveau de charge, tension, courant de charge/décharge)</li>
+    <li>Consommation électrique de la pompe</li>
+  </ul>
+
+  <h4>2. Performances de la Pompe</h4>
+  <ul>
+    <li>Débit d'eau (en m³/h ou L/min) – Capteur de débit</li>
+    <li>Pression d'eau (en bar ou psi) – Capteur de pression</li>
+    <li>Température du moteur (pour éviter la surchauffe)</li>
+    <li>État de fonctionnement (ON/OFF, mode veille)</li>
+  </ul>
+
+  <h4>3. Données Solaires et Environnementales</h4>
+  <ul>
+    <li>Ensoleillement (irradiance solaire en W/m²)</li>
+    <li>Température ambiante</li>
+    <li>État des panneaux solaires (propreté, ombrage, détection de défauts)</li>
+  </ul>
+
+  <h4>4. Surveillance du Réservoir/Stockage d'Eau</h4>
+  <ul>
+    <li>Niveau d'eau (capteur ultrasonique ou à flotteur)</li>
+    <li>Qualité de l'eau (pH, turbidité si nécessaire)</li>
+  </ul>
+
+  <h4>5. Données de Maintenance et Sécurité</h4>
+  <ul>
+    <li>Heures de fonctionnement (maintenance préventive)</li>
+    <li>Alertes de panne (surchauffe, faible débit, coupure courant)</li>
+    <li>État des connexions (court-circuit ou circuit ouvert)</li>
+  </ul>
+
+  <h4>6. Données de Communication IoT</h4>
+  <ul>
+    <li>État de la connexion réseau (4G/LoRa/WiFi)</li>
+    <li>Latence des données</li>
+    <li>Statut des mises à jour logicielles</li>
+  </ul>
+
+  <h4>7. Données Énergétiques et Efficacité</h4>
+  <ul>
+    <li>Rendement du système (énergie solaire/énergie utilisée)</li>
+    <li>Autonomie de la batterie (temps restant avant recharge)</li>
+  </ul>
+</div>
   <script>
     window.onload = function () {
       const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
