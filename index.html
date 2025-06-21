@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAFI ROBOTIQUE IOT Login</title>
+  <title>Shipping Documentation - Shandong Jingrui Transmission</title>
   <style>
     :root {
       --primary-color: #3498db;
@@ -12,252 +12,238 @@
       --light-gray: #f0f2f5;
       --border-color: #ddd;
       --error-color: #e74c3c;
+      --success-color: #2ecc71;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--light-gray);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
       color: var(--text-color);
+      line-height: 1.6;
+      padding: 20px;
     }
 
-    .login-container {
-      width: 100%;
-      max-width: 400px;
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
       background: #fff;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: transform 0.3s ease;
     }
 
-    .login-container:hover {
-      transform: translateY(-5px);
-    }
-
-    .logo {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
+    h1, h2, h3 {
       color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 25px;
     }
 
     h2 {
-      margin-bottom: 25px;
-      font-weight: 600;
+      font-size: 1.5rem;
+      margin-top: 30px;
     }
 
-    .input-group {
-      margin-bottom: 20px;
-      text-align: left;
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 20px;
     }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
-    input {
+    table {
       width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th, td {
       padding: 12px 15px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 16px;
-      transition: border 0.3s;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
+    th {
       background-color: var(--primary-color);
       color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 10px;
     }
 
-    button:hover {
-      background-color: var(--primary-dark);
+    tr:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+    }
+
+    .highlight {
+      background-color: rgba(52, 152, 219, 0.1);
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-weight: 600;
     }
 
     .note {
-      font-size: 13px;
-      color: #666;
-      margin-top: 20px;
-      line-height: 1.5;
+      background-color: var(--light-gray);
+      padding: 15px;
+      border-left: 4px solid var(--primary-color);
+      margin: 20px 0;
+      font-size: 0.9rem;
     }
 
-    .code {
-      background: #f5f5f5;
-      padding: 2px 5px;
-      border-radius: 3px;
-      font-family: monospace;
+    .action-item {
+      background-color: rgba(46, 204, 113, 0.1);
+      padding: 15px;
+      border-left: 4px solid var(--success-color);
+      margin: 20px 0;
     }
 
-    .error-message {
-      color: var(--error-color);
-      font-size: 14px;
-      margin-top: 5px;
-      display: none;
+    .action-item h4 {
+      color: var(--success-color);
+      margin-top: 0;
     }
 
-    @media (max-width: 480px) {
-      .login-container {
-        padding: 25px;
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
       }
       
-      .logo {
-        font-size: 2rem;
+      table {
+        display: block;
+        overflow-x: auto;
       }
-      
-      h2 {
-        font-size: 1.3rem;
-      }
-    }
-
-    /* Loading animation */
-    .spinner {
-      display: none;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-      margin: 0 auto;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo">🔐</div>
-    <h2>RAFI ROBOTIQUE IOT</h2>
+  <div class="container">
+    <h1>Shipping Documentation - Shandong Jingrui Transmission</h1>
     
-    <div class="input-group">
-      <label for="username">MQTT Username</label>
-      <input type="text" id="username" placeholder="admin1 or ESP32-001" autocomplete="username" />
-      <div id="username-error" class="error-message">Username is required</div>
+    <h2>1. Basic Shipment Details</h2>
+    <ul>
+      <li><strong>Shipper:</strong> SHANDONG JINGRUI TRANSMISSION TECHNOLOGY CO., LTD. (Jinan City, Shandong, China)</li>
+      <li><strong>Consignee:</strong> RAFI ROBOTIQUES ET MACHINERIES (Casablanca, Morocco | ICE Code: 003095668000021)</li>
+      <li><strong>B/L No.:</strong> <span class="highlight">MEDQ25043360</span></li>
+      <li><strong>Vessel & Voyage:</strong> HMM ALGECIRAS / 0017W</li>
+      <li><strong>Port of Loading:</strong> Qingdao, China</li>
+      <li><strong>Port of Discharge:</strong> Casablanca, Morocco</li>
+      <li><strong>Freight Terms:</strong> <span class="highlight">Freight Prepaid (CIF)</span></li>
+      <li><strong>Telex Release:</strong> Yes (No physical B/L required for cargo pickup)</li>
+    </ul>
+    
+    <h2>2. Cargo Information</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>HS Code</th>
+          <th>Description</th>
+          <th>Net Weight</th>
+          <th>Gross Weight</th>
+          <th>Measurement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Linear Guides</td>
+          <td>8466930030</td>
+          <td>Machinery parts</td>
+          <td>120 kg</td>
+          <td>164 kg</td>
+          <td>0.3444 CBM</td>
+        </tr>
+        <tr>
+          <td>Gear Rack and Pinion</td>
+          <td>8483409010</td>
+          <td>Machinery parts</td>
+          <td>Included</td>
+          <td>Included</td>
+          <td>Included</td>
+        </tr>
+        <tr>
+          <td>Stepper Motor</td>
+          <td>8501311000</td>
+          <td>Electric motor</td>
+          <td>Included</td>
+          <td>Included</td>
+          <td>Included</td>
+        </tr>
+        <tr>
+          <td>Drag Cable</td>
+          <td>3926909290</td>
+          <td>Plastic cable</td>
+          <td>Included</td>
+          <td>Included</td>
+          <td>Included</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="note">
+      <strong>Note:</strong> Total Packages: 1 CASE (LCL shipment) | Container No.: TLLU1064618/CN78639AR/40RH
     </div>
     
-    <div class="input-group">
-      <label for="password">MQTT Password</label>
-      <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" />
-      <div id="password-error" class="error-message">Password is required</div>
+    <h2>3. Freight & Charges (Prepaid)</h2>
+    <ul>
+      <li><strong>THC (Terminal Handling):</strong> USD 71</li>
+      <li><strong>D/O (Delivery Order):</strong> USD 58</li>
+      <li><strong>Stamp Fee:</strong> USD 27</li>
+      <li><strong>ERS (Emergency Bunker Surcharge):</strong> USD 25</li>
+      <li><strong>LSS (Low Sulfur Surcharge):</strong> USD 55</li>
+      <li><strong>PSS (Peak Season Surcharge):</strong> USD 10</li>
+    </ul>
+    
+    <div class="note">
+      <strong>Note:</strong> Warehouse and customs charges excluded. Total prepaid amount in local currency (details not specified).
     </div>
     
-    <button onclick="handleLogin()" id="login-btn">
-      <span id="btn-text">Login</span>
-      <span id="btn-spinner" class="spinner"></span>
-    </button>
+    <h2>4. Key Observations & Action Items</h2>
+    <div class="action-item">
+      <h4>HS Code Discrepancy</h4>
+      <p>HBL lists 8466930030 for Linear Guides, but Customs Declaration used 8487900000. <strong>Action:</strong> Verify correct HS code with Moroccan customs to avoid clearance delays.</p>
+    </div>
     
-    <p class="note">
-      Use prefix <span class="code">admin</span> for client access<br>
-      Use prefix <span class="code">ESP32</span> for device access
-    </p>
+    <div class="action-item">
+      <h4>Additional Items</h4>
+      <p>HBL includes Stepper Motor and Drag Cable, not declared in the Customs Form. <strong>Action:</strong> Confirm if these items require amendment to the customs declaration.</p>
+    </div>
+    
+    <div class="action-item">
+      <h4>Telex Release</h4>
+      <p>Ensures faster cargo release in Morocco (no original B/L needed).</p>
+    </div>
+    
+    <h2>5. Carrier & Contact Details</h2>
+    <ul>
+      <li><strong>Carrier Agent in Morocco:</strong> IFS NEUTRAL MARITIME MAROC SARL</li>
+      <li><strong>Address:</strong> 60, BD. MLY ISMALL, CASABLANCA</li>
+      <li><strong>Tel:</strong> +212 522 240 321</li>
+      <li><strong>Issued By:</strong> Signed in Qingdao on April 24, 2025</li>
+    </ul>
+    
+    <h2>Next Steps</h2>
+    <div class="note">
+      <p><strong>For Shipper (Jingrui):</strong></p>
+      <ul>
+        <li>Reconcile HS codes and missing items with customs broker.</li>
+        <li>Share HBL copy with consignee for smooth pickup.</li>
+      </ul>
+      
+      <p><strong>For Consignee (RAFI):</strong></p>
+      <ul>
+        <li>Contact Moroccan carrier agent (IFS Neutral) for arrival updates.</li>
+        <li>Prepare for Telex Release clearance.</li>
+      </ul>
+    </div>
+    
+    <div class="note" style="background-color: rgba(231, 76, 60, 0.1); border-left-color: var(--error-color);">
+      <strong>Important:</strong> Always cross-check HS codes and cargo details between HBL and Customs Declaration to ensure compliance.
+    </div>
   </div>
-
-  <script>
-    function showError(elementId, message) {
-      const element = document.getElementById(elementId);
-      element.textContent = message;
-      element.style.display = 'block';
-    }
-
-    function hideError(elementId) {
-      document.getElementById(elementId).style.display = 'none';
-    }
-
-    function showLoading() {
-      document.getElementById('btn-text').style.display = 'none';
-      document.getElementById('btn-spinner').style.display = 'block';
-      document.getElementById('login-btn').disabled = true;
-    }
-
-    function hideLoading() {
-      document.getElementById('btn-text').style.display = 'block';
-      document.getElementById('btn-spinner').style.display = 'none';
-      document.getElementById('login-btn').disabled = false;
-    }
-
-    function handleLogin() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value;
-      let isValid = true;
-
-      // Validate inputs
-      if (!username) {
-        showError('username-error', 'Username is required');
-        isValid = false;
-      } else {
-        hideError('username-error');
-      }
-
-      if (!password) {
-        showError('password-error', 'Password is required');
-        isValid = false;
-      } else {
-        hideError('password-error');
-      }
-
-      if (!isValid) return;
-
-      showLoading();
-
-      // Simulate network delay (remove in production)
-      setTimeout(() => {
-        sessionStorage.setItem("mqttUsername", username);
-        sessionStorage.setItem("mqttPassword", password);
-
-        const lowerUser = username.toLowerCase();
-
-        if (lowerUser.startsWith("admin")) {
-          window.location.href = "client.html";
-        } else if (lowerUser.startsWith("esp32")) {
-          window.location.href = "device.html";
-        } else {
-          hideLoading();
-          showError('username-error', 'Username must start with "admin" or "ESP32"');
-        }
-      }, 800);
-    }
-
-    // Enable Enter key to trigger login
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        handleLogin();
-      }
-    });
-
-    // Focus username field on page load
-    window.onload = function() {
-      document.getElementById("username").focus();
-    };
-  </script>
 </body>
 </html>
