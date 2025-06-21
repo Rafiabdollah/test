@@ -66,6 +66,40 @@
     <p> Consommation électrique : <span id="Consommation">--</span></p>
 </div>
   
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesPompe()">📊 Voir les Performances de la Pompe</h3>
+<div id="DonnéesPompe" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+    <p> Débit d'eau : <span id="Tension">--</span> L/min</p>
+    <p> Pression d'eau : <span id="Puissance">--</span> bar</p>
+    <p> Température du moteur : <span id="batterie">--</span>  °C</p>
+    <p> État de fonctionnement : <span id="Consommation">--</span></p>
+</div>
+  
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesSolaires()">📊 Voir les Données Solaires</h3>
+<div id="DonnéesSolaires" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+    <p> Ensoleillement  : <span id="Tension">--</span>  W/m²</p>
+    <p> Température ambiante : <span id="Puissance">--</span> °C</p>
+    <p> État des panneaux solaires : <span id="batterie">--</span></p>
+</div>
+  
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesStockage()">📊 Voir les Données de Stockage d'Eau</h3>
+<div id="DonnéesStockage" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+    <p> Niveau d'eau  : <span id="Tension">--</span></p>
+</div>
+
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesMaintenance()">📊 Voir les Données Maintenance et Sécurité</h3>
+<div id="DonnéesMaintenance" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+    <p> Heures de fonctionnement  : <span id="Tension">--</span>  H</p>
+    <p> Alertes de panne : <span id="Puissance">--</span></p>
+    <p> État des connexions : <span id="batterie">--</span></p>
+</div>
+
+<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesCommunication()">📊 Voir les Données de Communication</h3>
+<div id="DonnéesCommunication" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
+    <p> État de la connexion réseau  : <span id="Tension">--</span>  H</p>
+    <p> Latence des données : <span id="Puissance">--</span></p>
+    <p> Statut des mises à jour logicielles : <span id="batterie">--</span></p>
+</div> 
+  
   <script>
     window.onload = function () {
       const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
@@ -141,8 +175,28 @@
         logDiv.textContent = text + "\n" + logDiv.textContent;
       }
     };
-    function toggleDonnéesÉlectriques() {
+        function toggleDonnéesÉlectriques() {
   const panel = document.getElementById("DonnéesÉlectriques");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+        function toggleDonnéesPompe() {
+  const panel = document.getElementById("DonnéesPompe");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+        function toggleDonnéesSolaires() {
+  const panel = document.getElementById("DonnéesSolaires");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+        function toggleDonnéesStockage() {
+  const panel = document.getElementById("DonnéesStockage");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+        function toggleDonnéesMaintenance() {
+  const panel = document.getElementById("DonnéesMaintenance");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+        function toggleDonnéesCommunication() {
+  const panel = document.getElementById("DonnéesCommunication");
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
   </script>
