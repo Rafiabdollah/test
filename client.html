@@ -814,7 +814,8 @@
         etatReseau: "vfd/etat_reseau",
         latence: "vfd/latence",
         misesAJour: "vfd/mises_a_jour",
-        schedule: "vfd/schedule"
+        schedule: "vfd/schedule",
+        Speedinput: "vfd/Speedinput",
       }
     };
 
@@ -842,7 +843,7 @@
       
       slider.addEventListener('input', function() {
         valueDisplay.textContent = this.value + '%';
-        sendMotorCommand('speed:' + this.value);
+        sendMotorCommand('Speedinput:' + this.value);
       });
       
       // Add flash animation for emergency button
@@ -910,6 +911,10 @@
               // Update pump status icon
               if (key === "status") {
                 updatePumpStatus(payload);
+              }
+              // Handle alert messages
+              if (key === "alertes" && payload !== "Aucune") {
+                showAlert(`⚠️ ${payload}`, "alert-danger");
               }
               
               // Handle schedule updates
