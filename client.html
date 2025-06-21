@@ -1,261 +1,495 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Supervision IoT - Pompe Solaire Rabat</title>
-  <meta charset="UTF-8" />
   <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
   <style>
+    :root {
+      --primary-color: #3498db;
+      --danger-color: #e74c3c;
+      --warning-color: #f39c12;
+      --success-color: #2ecc71;
+      --light-bg: #f5f7fa;
+      --card-bg: #ffffff;
+      --text-color: #2c3e50;
+      --border-color: #ddd;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-      background-color: #f5f7fa;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      width: 100%;
       max-width: 1200px;
       margin: 0 auto;
+      padding: 15px;
     }
-    h2 {
-      color: #2c3e50;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 10px;
-    }
-    .data-block {
-      background: #fff;
-      padding: 20px;
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 0;
       margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      padding: 0 15px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 20px;
     }
+
     .status-card {
       display: flex;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(240, 240, 240, 0.5);
+      border-radius: 6px;
     }
+
     .status-icon {
-      font-size: 20px;
-      margin-right: 10px;
+      font-size: 24px;
+      margin-right: 15px;
       width: 30px;
       text-align: center;
     }
+
+    .status-info {
+      flex: 1;
+    }
+
+    .status-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .status-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
     button {
       padding: 10px 20px;
-      margin-right: 10px;
       font-weight: bold;
-      background-color: #3498db;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.3s;
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+
     button:hover {
       opacity: 0.9;
       transform: translateY(-2px);
     }
-    button:last-child {
-      background-color: #e74c3c;
+
+    .panel-header {
+      cursor: pointer;
+      background-color: #ecf0f1;
+      border-radius: 6px;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s;
     }
+
+    .panel-header:hover {
+      background-color: #dfe6e9;
+    }
+
+    .panel-icon {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    .panel-content {
+      padding: 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-warning {
+      background-color: #fff3cd;
+      border-left: 4px solid var(--warning-color);
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border-left: 4px solid var(--danger-color);
+    }
+
     #log {
       margin-top: 20px;
       padding: 15px;
       background: #eaf2f8;
-      border-left: 4px solid #3498db;
+      border-left: 4px solid var(--primary-color);
       font-size: 14px;
       white-space: pre-wrap;
       max-height: 200px;
       overflow-y: auto;
       border-radius: 4px;
     }
-    .panel-header {
-      cursor: pointer;
-      color: #2c3e50;
-      padding: 10px;
-      background-color: #ecf0f1;
-      border-radius: 6px;
-      margin-bottom: 5px;
-      display: flex;
-      align-items: center;
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 1.3rem;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+
+      .status-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .status-icon {
+        margin-right: 0;
+        margin-bottom: 8px;
+      }
+
+      button {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+      }
     }
-    .panel-header:hover {
-      background-color: #dfe6e9;
+
+    /* Animation for critical values */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
-    .panel-icon {
-      margin-right: 10px;
-      font-size: 18px;
+
+    .critical {
+      color: var(--danger-color);
+      font-weight: bold;
+      animation: pulse 1.5s infinite;
     }
-    .panel-content {
-      padding: 15px;
-      background: #fefefe;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      margin-bottom: 15px;
+
+    .warning {
+      color: var(--warning-color);
+      font-weight: bold;
     }
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 15px;
-    }
-    .alert {
-      padding: 10px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-    }
-    .alert-warning {
-      background-color: #fff3cd;
-      border-left: 4px solid #ffc107;
-    }
-    .alert-danger {
-      background-color: #f8d7da;
-      border-left: 4px solid #dc3545;
+
+    .normal {
+      color: var(--success-color);
     }
   </style>
 </head>
 <body>
-  <h2>🚀 Supervision IoT - POMPE SOLAIRE RABAT</h2>
+  <header>
+    <div class="container">
+      <h1>🚀 Supervision IoT - POMPE SOLAIRE RABAT</h1>
+    </div>
+  </header>
 
-  <div class="data-block">
-    <h3>🔍 État Général du Système</h3>
-    <div class="status-card">
-      <div class="status-icon">🌡️</div>
-      <div>Température: <span id="temperature" class="value">--</span> °C</div>
-    </div>
-    <div class="status-card">
-      <div class="status-icon">⚡</div>
-      <div>Vitesse: <span id="speed" class="value">--</span> RPM</div>
-    </div>
-    <div class="status-card">
-      <div class="status-icon">🔌</div>
-      <div>Statut: <span id="status" class="value">--</span></div>
-    </div>
-    
-    <div style="margin-top: 20px;">
-      <button onclick="sendMotorCommand('on')">▶ Démarrer la Pompe</button>
-      <button onclick="sendMotorCommand('off')">⏹ Arrêter la Pompe</button>
-    </div>
-  </div>
-
-  <div class="panel-header" onclick="togglePanel('DonnéesÉlectriques')">
-    <div class="panel-icon">📊</div>
-    <div>Données Électriques</div>
-  </div>
-  <div id="DonnéesÉlectriques" class="panel-content" style="display:none;">
-    <div class="grid-container">
+  <div class="container">
+    <div class="card">
+      <h2>🔍 État Général du Système</h2>
+      
+      <div class="status-card">
+        <div class="status-icon">🌡️</div>
+        <div class="status-info">
+          <div class="status-label">Température</div>
+          <div class="status-value" id="temperature">--</div>
+        </div>
+      </div>
+      
       <div class="status-card">
         <div class="status-icon">⚡</div>
-        <div>Tension: <span id="tension">--</span> V</div>
+        <div class="status-info">
+          <div class="status-label">Vitesse</div>
+          <div class="status-value" id="speed">--</div>
+        </div>
       </div>
+      
       <div class="status-card">
-        <div class="status-icon">☀️</div>
-        <div>Puissance générée: <span id="puissance">--</span> W</div>
+        <div class="status-icon">🔌</div>
+        <div class="status-info">
+          <div class="status-label">Statut</div>
+          <div class="status-value" id="status">--</div>
+        </div>
       </div>
-      <div class="status-card">
-        <div class="status-icon">🔋</div>
-        <div>État batterie: <span id="batterie">--</span>%</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">💡</div>
-        <div>Consommation: <span id="consommation">--</span> W</div>
+      
+      <div class="button-group">
+        <button class="btn-primary" onclick="sendMotorCommand('on')">
+          <span>▶</span> Démarrer
+        </button>
+        <button class="btn-danger" onclick="sendMotorCommand('off')">
+          <span>⏹</span> Arrêter
+        </button>
       </div>
     </div>
-  </div>
-  
-  <div class="panel-header" onclick="togglePanel('DonnéesPompe')">
-    <div class="panel-icon">📊</div>
-    <div>Performances de la Pompe</div>
-  </div>
-  <div id="DonnéesPompe" class="panel-content" style="display:none;">
-    <div class="grid-container">
+
+    <div class="panel-header" onclick="togglePanel('DonnéesÉlectriques')">
+      <div class="panel-icon">📊</div>
+      <div>Données Électriques</div>
+    </div>
+    <div id="DonnéesÉlectriques" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">⚡</div>
+          <div class="status-info">
+            <div class="status-label">Tension</div>
+            <div class="status-value" id="tension">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">☀️</div>
+          <div class="status-info">
+            <div class="status-label">Puissance</div>
+            <div class="status-value" id="puissance">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔋</div>
+          <div class="status-info">
+            <div class="status-label">Batterie</div>
+            <div class="status-value" id="batterie">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">💡</div>
+          <div class="status-info">
+            <div class="status-label">Consommation</div>
+            <div class="status-value" id="consommation">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="panel-header" onclick="togglePanel('DonnéesPompe')">
+      <div class="panel-icon">📊</div>
+      <div>Performances de la Pompe</div>
+    </div>
+    <div id="DonnéesPompe" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">💧</div>
+          <div class="status-info">
+            <div class="status-label">Débit d'eau</div>
+            <div class="status-value" id="debit">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">📏</div>
+          <div class="status-info">
+            <div class="status-label">Pression</div>
+            <div class="status-value" id="pression">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🌡️</div>
+          <div class="status-info">
+            <div class="status-label">Temp. moteur</div>
+            <div class="status-value" id="temp-moteur">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔄</div>
+          <div class="status-info">
+            <div class="status-label">État</div>
+            <div class="status-value" id="etat-pompe">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="panel-header" onclick="togglePanel('DonnéesSolaires')">
+      <div class="panel-icon">📊</div>
+      <div>Données Solaires</div>
+    </div>
+    <div id="DonnéesSolaires" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">☀️</div>
+          <div class="status-info">
+            <div class="status-label">Ensoleillement</div>
+            <div class="status-value" id="ensoleillement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🌡️</div>
+          <div class="status-info">
+            <div class="status-label">Temp. ambiante</div>
+            <div class="status-value" id="temp-ambiante">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🛠️</div>
+          <div class="status-info">
+            <div class="status-label">État panneaux</div>
+            <div class="status-value" id="etat-panneaux">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="panel-header" onclick="togglePanel('DonnéesStockage')">
+      <div class="panel-icon">📊</div>
+      <div>Stockage d'Eau</div>
+    </div>
+    <div id="DonnéesStockage" class="panel-content">
       <div class="status-card">
         <div class="status-icon">💧</div>
-        <div>Débit d'eau: <span id="debit">--</span> L/min</div>
+        <div class="status-info">
+          <div class="status-label">Niveau d'eau</div>
+          <div class="status-value" id="niveau-eau">--</div>
+        </div>
       </div>
-      <div class="status-card">
-        <div class="status-icon">📏</div>
-        <div>Pression: <span id="pression">--</span> bar</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">🌡️</div>
-        <div>Température moteur: <span id="temp-moteur">--</span> °C</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">🔄</div>
-        <div>État fonctionnement: <span id="etat-pompe">--</span></div>
-      </div>
+      <div id="alerte-niveau-eau" class="alert" style="display:none;"></div>
     </div>
-  </div>
-  
-  <div class="panel-header" onclick="togglePanel('DonnéesSolaires')">
-    <div class="panel-icon">📊</div>
-    <div>Données Solaires</div>
-  </div>
-  <div id="DonnéesSolaires" class="panel-content" style="display:none;">
-    <div class="grid-container">
-      <div class="status-card">
-        <div class="status-icon">☀️</div>
-        <div>Ensoleillement: <span id="ensoleillement">--</span> W/m²</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">🌡️</div>
-        <div>Température ambiante: <span id="temp-ambiante">--</span> °C</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">🛠️</div>
-        <div>État panneaux: <span id="etat-panneaux">--</span></div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="panel-header" onclick="togglePanel('DonnéesStockage')">
-    <div class="panel-icon">📊</div>
-    <div>Stockage d'Eau</div>
-  </div>
-  <div id="DonnéesStockage" class="panel-content" style="display:none;">
-    <div class="status-card">
-      <div class="status-icon">💧</div>
-      <div>Niveau d'eau: <span id="niveau-eau">--</span>%</div>
-    </div>
-    <div id="alerte-niveau-eau" class="alert" style="display:none;"></div>
-  </div>
 
-  <div class="panel-header" onclick="togglePanel('DonnéesMaintenance')">
-    <div class="panel-icon">📊</div>
-    <div>Maintenance et Sécurité</div>
-  </div>
-  <div id="DonnéesMaintenance" class="panel-content" style="display:none;">
-    <div class="grid-container">
-      <div class="status-card">
-        <div class="status-icon">⏱️</div>
-        <div>Heures de fonctionnement: <span id="heures-fonctionnement">--</span> H</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">⚠️</div>
-        <div>Alertes: <span id="alertes">Aucune</span></div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">🔗</div>
-        <div>État connexions: <span id="etat-connexions">OK</span></div>
+    <div class="panel-header" onclick="togglePanel('DonnéesMaintenance')">
+      <div class="panel-icon">📊</div>
+      <div>Maintenance et Sécurité</div>
+    </div>
+    <div id="DonnéesMaintenance" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">⏱️</div>
+          <div class="status-info">
+            <div class="status-label">Heures fonctionnement</div>
+            <div class="status-value" id="heures-fonctionnement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">⚠️</div>
+          <div class="status-info">
+            <div class="status-label">Alertes</div>
+            <div class="status-value" id="alertes">Aucune</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔗</div>
+          <div class="status-info">
+            <div class="status-label">Connexions</div>
+            <div class="status-value" id="etat-connexions">OK</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="panel-header" onclick="togglePanel('DonnéesCommunication')">
-    <div class="panel-icon">📊</div>
-    <div>Communication IoT</div>
-  </div>
-  <div id="DonnéesCommunication" class="panel-content" style="display:none;">
-    <div class="grid-container">
-      <div class="status-card">
-        <div class="status-icon">📶</div>
-        <div>Connexion réseau: <span id="etat-reseau">--</span></div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">⏳</div>
-        <div>Latence: <span id="latence">--</span> ms</div>
-      </div>
-      <div class="status-card">
-        <div class="status-icon">🔄</div>
-        <div>Mises à jour: <span id="mises-a-jour">À jour</span></div>
-      </div>
+    <div class="panel-header" onclick="togglePanel('DonnéesCommunication')">
+      <div class="panel-icon">📊</div>
+      <div>Communication IoT</div>
     </div>
-    <div id="log">📡 En attente de données MQTT...</div>
+    <div id="DonnéesCommunication" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">📶</div>
+          <div class="status-info">
+            <div class="status-label">Connexion réseau</div>
+            <div class="status-value" id="etat-reseau">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">⏳</div>
+          <div class="status-info">
+            <div class="status-label">Latence</div>
+            <div class="status-value" id="latence">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔄</div>
+          <div class="status-info">
+            <div class="status-label">Mises à jour</div>
+            <div class="status-value" id="mises-a-jour">À jour</div>
+          </div>
+        </div>
+      </div>
+      <div id="log">📡 En attente de données MQTT...</div>
+    </div>
   </div>
 
   <script>
@@ -289,7 +523,7 @@
 
     let mqttClient = null;
 
-    window.onload = function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const username = sessionStorage.getItem("mqttUsername");
       const password = sessionStorage.getItem("mqttPassword");
 
@@ -300,41 +534,61 @@
       }
 
       initializeMQTT(username, password);
-    };
+      
+      // Open first panel by default on desktop
+      if (window.innerWidth > 768) {
+        togglePanel('DonnéesÉlectriques', true);
+      }
+    });
 
     function initializeMQTT(username, password) {
       const clientID = "client_" + Math.random().toString(16).substr(2, 8);
       mqttClient = new Paho.Client(mqttConfig.broker, clientID);
 
-      mqttClient.onConnectionLost = function (responseObject) {
+      mqttClient.onConnectionLost = function(responseObject) {
         logMessage("❌ Connexion perdue: " + responseObject.errorMessage);
-        document.getElementById("etat-reseau").textContent = "Déconnecté";
-        document.getElementById("etat-reseau").style.color = "red";
+        updateStatus("etat-reseau", "Déconnecté", "critical");
       };
 
-      mqttClient.onMessageArrived = function (message) {
+      mqttClient.onMessageArrived = function(message) {
         const topic = message.destinationName;
         const payload = message.payloadString;
         const timestamp = new Date().toLocaleTimeString();
 
-        // Mise à jour des valeurs en fonction du topic
+        // Update values based on topic
         for (const [key, value] of Object.entries(mqttConfig.topics)) {
           if (topic === value) {
             const element = document.getElementById(key);
             if (element) {
               element.textContent = payload;
               
-              // Mise en forme conditionnelle
+              // Apply conditional formatting
               if (key === "batterie" || key === "niveauEau") {
                 const numericValue = parseFloat(payload);
-                element.style.color = numericValue < 20 ? "red" : numericValue < 50 ? "orange" : "green";
+                if (numericValue < 20) {
+                  updateStatus(key, payload + (key === "batterie" ? "%" : "%"), "critical");
+                  if (key === "niveauEau") showAlert("⚠️ Niveau d'eau critique!", "alert-danger");
+                } else if (numericValue < 50) {
+                  updateStatus(key, payload + (key === "batterie" ? "%" : "%"), "warning");
+                } else {
+                  updateStatus(key, payload + (key === "batterie" ? "%" : "%"), "normal");
+                }
               }
               
               if (key === "temperature" || key === "tempMoteur") {
                 const numericValue = parseFloat(payload);
                 if (numericValue > 60) {
+                  updateStatus(key, payload + "°C", "critical");
                   showAlert(`⚠️ Température élevée: ${payload}°C`, "alert-danger");
+                } else if (numericValue > 45) {
+                  updateStatus(key, payload + "°C", "warning");
+                } else {
+                  updateStatus(key, payload + "°C", "normal");
                 }
+              }
+              
+              if (key === "etat-reseau") {
+                updateStatus(key, payload, payload === "Connecté" ? "normal" : "critical");
               }
             }
           }
@@ -347,23 +601,30 @@
         useSSL: true,
         userName: username,
         password: password,
-        onSuccess: function () {
+        onSuccess: function() {
           logMessage("✅ Connecté au broker MQTT");
-          document.getElementById("etat-reseau").textContent = "Connecté";
-          document.getElementById("etat-reseau").style.color = "green";
+          updateStatus("etat-reseau", "Connecté", "normal");
           
-          // Abonnement à tous les topics
+          // Subscribe to all topics
           Object.values(mqttConfig.topics).forEach(topic => {
             mqttClient.subscribe(topic);
           });
         },
-        onFailure: function (err) {
+        onFailure: function(err) {
           alert("Échec de connexion MQTT: " + err.errorMessage);
         }
       });
     }
 
-    window.sendMotorCommand = function (command) {
+    function updateStatus(elementId, value, status) {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.textContent = value;
+        element.className = "status-value " + status;
+      }
+    }
+
+    window.sendMotorCommand = function(command) {
       if (!mqttClient || !mqttClient.isConnected()) {
         alert("Non connecté au broker MQTT.");
         return;
@@ -380,25 +641,24 @@
       logDiv.textContent = text + "\n" + logDiv.textContent;
     }
 
-    function togglePanel(panelId) {
+    function togglePanel(panelId, forceOpen = false) {
       const panel = document.getElementById(panelId);
-      panel.style.display = panel.style.display === "none" ? "block" : "none";
+      if (forceOpen) {
+        panel.style.display = "block";
+      } else {
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+      }
     }
 
     function showAlert(message, type) {
       const alertDiv = document.createElement("div");
       alertDiv.className = `alert ${type}`;
-      alertDiv.textContent = message;
+      alertDiv.innerHTML = `<span>${type === 'alert-danger' ? '⚠️' : '❗'}</span> ${message}`;
       
-      // Trouver le panneau approprié pour afficher l'alerte
-      let targetPanel = document.getElementById("DonnéesMaintenance");
-      if (type === "alert-danger") {
-        targetPanel = document.getElementById("DonnéesMaintenance");
-      }
+      const alertsContainer = document.getElementById("DonnéesMaintenance");
+      alertsContainer.insertBefore(alertDiv, alertsContainer.firstChild);
       
-      targetPanel.insertBefore(alertDiv, targetPanel.firstChild);
-      
-      // Supprimer l'alerte après 5 secondes
+      // Remove alert after 5 seconds
       setTimeout(() => {
         alertDiv.remove();
       }, 5000);
