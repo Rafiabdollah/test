@@ -1,24 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>IOT Client Panel</title>
+  <title>Supervision IoT - Pompe Solaire Rabat</title>
   <meta charset="UTF-8" />
   <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background-color: #f5f7fa;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     h2 {
       color: #2c3e50;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
     }
     .data-block {
       background: #fff;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .status-card {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .status-icon {
+      font-size: 20px;
+      margin-right: 10px;
+      width: 30px;
+      text-align: center;
     }
     button {
       padding: 10px 20px;
@@ -29,177 +44,365 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
     }
     button:last-child {
       background-color: #e74c3c;
     }
     #log {
       margin-top: 20px;
-      padding: 10px;
+      padding: 15px;
       background: #eaf2f8;
       border-left: 4px solid #3498db;
       font-size: 14px;
       white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 4px;
+    }
+    .panel-header {
+      cursor: pointer;
+      color: #2c3e50;
+      padding: 10px;
+      background-color: #ecf0f1;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    .panel-header:hover {
+      background-color: #dfe6e9;
+    }
+    .panel-icon {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    .panel-content {
+      padding: 15px;
+      background: #fefefe;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+    .alert {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .alert-warning {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+    }
+    .alert-danger {
+      background-color: #f8d7da;
+      border-left: 4px solid #dc3545;
     }
   </style>
 </head>
 <body>
-  <h2>Client: POMPE SOLAIRE RABAT</h2>
+  <h2>🚀 Supervision IoT - POMPE SOLAIRE RABAT</h2>
 
   <div class="data-block">
-    <p>🌡️ Temperature: <span id="temperature">--</span> °C</p>
-    <p>⚙️ Speed: <span id="speed">--</span> RPM</p>
-    <p>🔌 Status: <span id="status">--</span></p>
+    <h3>🔍 État Général du Système</h3>
+    <div class="status-card">
+      <div class="status-icon">🌡️</div>
+      <div>Température: <span id="temperature" class="value">--</span> °C</div>
+    </div>
+    <div class="status-card">
+      <div class="status-icon">⚡</div>
+      <div>Vitesse: <span id="speed" class="value">--</span> RPM</div>
+    </div>
+    <div class="status-card">
+      <div class="status-icon">🔌</div>
+      <div>Statut: <span id="status" class="value">--</span></div>
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <button onclick="sendMotorCommand('on')">▶ Démarrer la Pompe</button>
+      <button onclick="sendMotorCommand('off')">⏹ Arrêter la Pompe</button>
+    </div>
   </div>
 
-  <button onclick="sendMotorCommand('on')">Start Motor</button>
-  <button onclick="sendMotorCommand('off')">Stop Motor</button>
-
-
-
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesÉlectriques()">📊 Voir les données Électriques</h3>
-<div id="DonnéesÉlectriques" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p> Tension : <span id="Tension">--</span> °C</p>
-    <p> Puissance générée : <span id="Puissance">--</span> RPM</p>
-    <p> État de la batterie : <span id="batterie">--</span></p>
-    <p> Consommation électrique : <span id="Consommation">--</span></p>
-</div>
+  <div class="panel-header" onclick="togglePanel('DonnéesÉlectriques')">
+    <div class="panel-icon">📊</div>
+    <div>Données Électriques</div>
+  </div>
+  <div id="DonnéesÉlectriques" class="panel-content" style="display:none;">
+    <div class="grid-container">
+      <div class="status-card">
+        <div class="status-icon">⚡</div>
+        <div>Tension: <span id="tension">--</span> V</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">☀️</div>
+        <div>Puissance générée: <span id="puissance">--</span> W</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🔋</div>
+        <div>État batterie: <span id="batterie">--</span>%</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">💡</div>
+        <div>Consommation: <span id="consommation">--</span> W</div>
+      </div>
+    </div>
+  </div>
   
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesPompe()">📊 Voir les Performances de la Pompe</h3>
-<div id="DonnéesPompe" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p> Débit d'eau : <span id="Tension">--</span> L/min</p>
-    <p> Pression d'eau : <span id="Puissance">--</span> bar</p>
-    <p> Température du moteur : <span id="batterie">--</span>  °C</p>
-    <p> État de fonctionnement : <span id="Consommation">--</span></p>
-</div>
+  <div class="panel-header" onclick="togglePanel('DonnéesPompe')">
+    <div class="panel-icon">📊</div>
+    <div>Performances de la Pompe</div>
+  </div>
+  <div id="DonnéesPompe" class="panel-content" style="display:none;">
+    <div class="grid-container">
+      <div class="status-card">
+        <div class="status-icon">💧</div>
+        <div>Débit d'eau: <span id="debit">--</span> L/min</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">📏</div>
+        <div>Pression: <span id="pression">--</span> bar</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🌡️</div>
+        <div>Température moteur: <span id="temp-moteur">--</span> °C</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🔄</div>
+        <div>État fonctionnement: <span id="etat-pompe">--</span></div>
+      </div>
+    </div>
+  </div>
   
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesSolaires()">📊 Voir les Données Solaires</h3>
-<div id="DonnéesSolaires" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p> Ensoleillement  : <span id="Tension">--</span>  W/m²</p>
-    <p> Température ambiante : <span id="Puissance">--</span> °C</p>
-    <p> État des panneaux solaires : <span id="batterie">--</span></p>
-</div>
+  <div class="panel-header" onclick="togglePanel('DonnéesSolaires')">
+    <div class="panel-icon">📊</div>
+    <div>Données Solaires</div>
+  </div>
+  <div id="DonnéesSolaires" class="panel-content" style="display:none;">
+    <div class="grid-container">
+      <div class="status-card">
+        <div class="status-icon">☀️</div>
+        <div>Ensoleillement: <span id="ensoleillement">--</span> W/m²</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🌡️</div>
+        <div>Température ambiante: <span id="temp-ambiante">--</span> °C</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🛠️</div>
+        <div>État panneaux: <span id="etat-panneaux">--</span></div>
+      </div>
+    </div>
+  </div>
   
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesStockage()">📊 Voir les Données de Stockage d'Eau</h3>
-<div id="DonnéesStockage" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p> Niveau d'eau  : <span id="Tension">--</span></p>
-</div>
+  <div class="panel-header" onclick="togglePanel('DonnéesStockage')">
+    <div class="panel-icon">📊</div>
+    <div>Stockage d'Eau</div>
+  </div>
+  <div id="DonnéesStockage" class="panel-content" style="display:none;">
+    <div class="status-card">
+      <div class="status-icon">💧</div>
+      <div>Niveau d'eau: <span id="niveau-eau">--</span>%</div>
+    </div>
+    <div id="alerte-niveau-eau" class="alert" style="display:none;"></div>
+  </div>
 
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesMaintenance()">📊 Voir les Données Maintenance et Sécurité</h3>
-<div id="DonnéesMaintenance" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p> Heures de fonctionnement  : <span id="Tension">--</span>  H</p>
-    <p> Alertes de panne : <span id="Puissance">--</span></p>
-    <p> État des connexions : <span id="batterie">--</span></p>
-</div>
+  <div class="panel-header" onclick="togglePanel('DonnéesMaintenance')">
+    <div class="panel-icon">📊</div>
+    <div>Maintenance et Sécurité</div>
+  </div>
+  <div id="DonnéesMaintenance" class="panel-content" style="display:none;">
+    <div class="grid-container">
+      <div class="status-card">
+        <div class="status-icon">⏱️</div>
+        <div>Heures de fonctionnement: <span id="heures-fonctionnement">--</span> H</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">⚠️</div>
+        <div>Alertes: <span id="alertes">Aucune</span></div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🔗</div>
+        <div>État connexions: <span id="etat-connexions">OK</span></div>
+      </div>
+    </div>
+  </div>
 
-<h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesCommunication()">📊 Voir les Données de Communication</h3>
-<div id="DonnéesCommunication" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p> État de la connexion réseau  : <span id="Tension">--</span>  H</p>
-    <p> Latence des données : <span id="Puissance">--</span></p>
-    <p> Statut des mises à jour logicielles : <span id="batterie">--</span></p>
-    <div id="log">📡 Waiting for MQTT messages...</div>
-<hr><br>
-</div> 
-  
+  <div class="panel-header" onclick="togglePanel('DonnéesCommunication')">
+    <div class="panel-icon">📊</div>
+    <div>Communication IoT</div>
+  </div>
+  <div id="DonnéesCommunication" class="panel-content" style="display:none;">
+    <div class="grid-container">
+      <div class="status-card">
+        <div class="status-icon">📶</div>
+        <div>Connexion réseau: <span id="etat-reseau">--</span></div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">⏳</div>
+        <div>Latence: <span id="latence">--</span> ms</div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon">🔄</div>
+        <div>Mises à jour: <span id="mises-a-jour">À jour</span></div>
+      </div>
+    </div>
+    <div id="log">📡 En attente de données MQTT...</div>
+  </div>
+
   <script>
+    // Configuration MQTT
+    const mqttConfig = {
+      broker: "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt",
+      topics: {
+        temperature: "vfd/temperature",
+        speed: "vfd/speed",
+        status: "vfd/status",
+        tension: "vfd/tension",
+        puissance: "vfd/puissance",
+        batterie: "vfd/batterie",
+        consommation: "vfd/consommation",
+        debit: "vfd/debit",
+        pression: "vfd/pression",
+        tempMoteur: "vfd/temp_moteur",
+        etatPompe: "vfd/etat_pompe",
+        ensoleillement: "vfd/ensoleillement",
+        tempAmbiante: "vfd/temp_ambiante",
+        etatPanneaux: "vfd/etat_panneaux",
+        niveauEau: "vfd/niveau_eau",
+        heuresFonctionnement: "vfd/heures_fonctionnement",
+        alertes: "vfd/alertes",
+        etatConnexions: "vfd/etat_connexions",
+        etatReseau: "vfd/etat_reseau",
+        latence: "vfd/latence",
+        misesAJour: "vfd/mises_a_jour"
+      }
+    };
+
+    let mqttClient = null;
+
     window.onload = function () {
-      const broker = "wss://1b56fa9f5384446881ab36a7be8959fb.s1.eu.hivemq.cloud:8884/mqtt";
       const username = sessionStorage.getItem("mqttUsername");
       const password = sessionStorage.getItem("mqttPassword");
 
       if (!username || !password) {
-        alert("Missing MQTT credentials. Please log in again.");
+        alert("Identifiants MQTT manquants. Veuillez vous reconnecter.");
         window.location.href = "index.html";
         return;
       }
 
-      const clientID = "client_" + Math.random().toString(16).substr(2, 8);
-      const client = new Paho.Client(broker, clientID);
+      initializeMQTT(username, password);
+    };
 
-      client.onConnectionLost = function (responseObject) {
-        logMessage("❌ Connection lost: " + responseObject.errorMessage);
+    function initializeMQTT(username, password) {
+      const clientID = "client_" + Math.random().toString(16).substr(2, 8);
+      mqttClient = new Paho.Client(mqttConfig.broker, clientID);
+
+      mqttClient.onConnectionLost = function (responseObject) {
+        logMessage("❌ Connexion perdue: " + responseObject.errorMessage);
+        document.getElementById("etat-reseau").textContent = "Déconnecté";
+        document.getElementById("etat-reseau").style.color = "red";
       };
 
-      client.onMessageArrived = function (message) {
+      mqttClient.onMessageArrived = function (message) {
         const topic = message.destinationName;
         const payload = message.payloadString;
         const timestamp = new Date().toLocaleTimeString();
 
-        if (topic === "vfd/temperature") {
-          document.getElementById("temperature").innerText = payload;
-        } else if (topic === "vfd/speed") {
-          document.getElementById("speed").innerText = payload;
-        } else if (topic === "vfd/status") {
-          document.getElementById("status").innerText = payload;
-        } else if (topic === "vfd/status") {
-          document.getElementById("Tension").innerText = payload;
-        } else if (topic === "vfd/Tension") {
-          document.getElementById("Puissance").innerText = payload;
-        } else if (topic === "vfd/status") {
-          document.getElementById("batterie").innerText = payload;
-        } else if (topic === "vfd/Consommation") {
-          document.getElementById("Consommation").innerText = payload;
+        // Mise à jour des valeurs en fonction du topic
+        for (const [key, value] of Object.entries(mqttConfig.topics)) {
+          if (topic === value) {
+            const element = document.getElementById(key);
+            if (element) {
+              element.textContent = payload;
+              
+              // Mise en forme conditionnelle
+              if (key === "batterie" || key === "niveauEau") {
+                const numericValue = parseFloat(payload);
+                element.style.color = numericValue < 20 ? "red" : numericValue < 50 ? "orange" : "green";
+              }
+              
+              if (key === "temperature" || key === "tempMoteur") {
+                const numericValue = parseFloat(payload);
+                if (numericValue > 60) {
+                  showAlert(`⚠️ Température élevée: ${payload}°C`, "alert-danger");
+                }
+              }
+            }
+          }
         }
-        
+
         logMessage(`📥 ${timestamp} — [${topic}]: ${payload}`);
       };
 
-      client.connect({
+      mqttClient.connect({
         useSSL: true,
         userName: username,
         password: password,
         onSuccess: function () {
-          logMessage("✅ Connected to MQTT broker.");
-          client.subscribe("vfd/temperature");
-          client.subscribe("vfd/speed");
-          client.subscribe("vfd/status");
+          logMessage("✅ Connecté au broker MQTT");
+          document.getElementById("etat-reseau").textContent = "Connecté";
+          document.getElementById("etat-reseau").style.color = "green";
+          
+          // Abonnement à tous les topics
+          Object.values(mqttConfig.topics).forEach(topic => {
+            mqttClient.subscribe(topic);
+          });
         },
         onFailure: function (err) {
-          alert("MQTT connection failed: " + err.errorMessage);
+          alert("Échec de connexion MQTT: " + err.errorMessage);
         }
       });
+    }
 
-      window.sendMotorCommand = function (command) {
-        if (!client.isConnected()) {
-          alert("Not connected to MQTT broker.");
-          return;
-        }
-        const msg = new Paho.Message(command);
-        msg.destinationName = "vfd/status";
-        client.send(msg);
-        const timestamp = new Date().toLocaleTimeString();
-        logMessage(`📤 ${timestamp} — Sent command: "${command}" to vfd/status`);
-      };
-
-      function logMessage(text) {
-        const logDiv = document.getElementById("log");
-        logDiv.textContent = text + "\n" + logDiv.textContent;
+    window.sendMotorCommand = function (command) {
+      if (!mqttClient || !mqttClient.isConnected()) {
+        alert("Non connecté au broker MQTT.");
+        return;
       }
+      const msg = new Paho.Message(command);
+      msg.destinationName = mqttConfig.topics.status;
+      mqttClient.send(msg);
+      const timestamp = new Date().toLocaleTimeString();
+      logMessage(`📤 ${timestamp} — Commande envoyée: "${command}" à ${mqttConfig.topics.status}`);
     };
-        function toggleDonnéesÉlectriques() {
-  const panel = document.getElementById("DonnéesÉlectriques");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-        function toggleDonnéesPompe() {
-  const panel = document.getElementById("DonnéesPompe");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-        function toggleDonnéesSolaires() {
-  const panel = document.getElementById("DonnéesSolaires");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-        function toggleDonnéesStockage() {
-  const panel = document.getElementById("DonnéesStockage");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-        function toggleDonnéesMaintenance() {
-  const panel = document.getElementById("DonnéesMaintenance");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-        function toggleDonnéesCommunication() {
-  const panel = document.getElementById("DonnéesCommunication");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
+
+    function logMessage(text) {
+      const logDiv = document.getElementById("log");
+      logDiv.textContent = text + "\n" + logDiv.textContent;
+    }
+
+    function togglePanel(panelId) {
+      const panel = document.getElementById(panelId);
+      panel.style.display = panel.style.display === "none" ? "block" : "none";
+    }
+
+    function showAlert(message, type) {
+      const alertDiv = document.createElement("div");
+      alertDiv.className = `alert ${type}`;
+      alertDiv.textContent = message;
+      
+      // Trouver le panneau approprié pour afficher l'alerte
+      let targetPanel = document.getElementById("DonnéesMaintenance");
+      if (type === "alert-danger") {
+        targetPanel = document.getElementById("DonnéesMaintenance");
+      }
+      
+      targetPanel.insertBefore(alertDiv, targetPanel.firstChild);
+      
+      // Supprimer l'alerte après 5 secondes
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000);
+    }
   </script>
 </body>
 </html>
