@@ -397,6 +397,33 @@
       width: 100%;
     }
 
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin: 10px 0;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
     /* Animation for critical values */
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -471,11 +498,11 @@
         </div>
         <div class="indicator active">
           <div class="led"></div>
-          <span>Solar: 85%</span>
+          <span>Solar: <span id="ensoleillement-value">--</span>%</span>
         </div>
         <div class="indicator">
           <div class="led"></div>
-          <span>Battery: 92%</span>
+          <span>Battery: <span id="batterie-value">--</span>%</span>
         </div>
       </div>
     </header>
@@ -572,15 +599,15 @@
       </button>
     </div>
 
-    <!-- Data Panels -->
+    <!-- Electrical Data Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesÉlectriques')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">⚡</div>
       <div>Données Électriques</div>
     </div>
     <div id="DonnéesÉlectriques" class="panel-content">
       <div class="grid-container">
         <div class="status-card">
-          <div class="status-icon">⚡</div>
+          <div class="status-icon">🔌</div>
           <div class="status-info">
             <div class="status-label">Tension</div>
             <div class="status-value" id="tension">--</div>
@@ -610,14 +637,15 @@
       </div>
     </div>
     
+    <!-- Pump Performance Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesPompe')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">💧</div>
       <div>Performances de la Pompe</div>
     </div>
     <div id="DonnéesPompe" class="panel-content">
       <div class="grid-container">
         <div class="status-card">
-          <div class="status-icon">💧</div>
+          <div class="status-icon">🚰</div>
           <div class="status-info">
             <div class="status-label">Débit d'eau</div>
             <div class="status-value" id="debit">--</div>
@@ -640,15 +668,94 @@
         <div class="status-card">
           <div class="status-icon">🔄</div>
           <div class="status-info">
-            <div class="status-label">État</div>
+            <div class="status-label">État Pompe</div>
             <div class="status-value" id="etat-pompe">--</div>
           </div>
         </div>
       </div>
     </div>
     
+    <!-- Solar Data Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesSolaires')">
+      <div class="panel-icon">☀️</div>
+      <div>Données Solaires</div>
+    </div>
+    <div id="DonnéesSolaires" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">🌞</div>
+          <div class="status-info">
+            <div class="status-label">Ensoleillement</div>
+            <div class="status-value" id="ensoleillement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🌡️</div>
+          <div class="status-info">
+            <div class="status-label">Temp. ambiante</div>
+            <div class="status-value" id="temp-ambiante">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🛠️</div>
+          <div class="status-info">
+            <div class="status-label">État panneaux</div>
+            <div class="status-value" id="etat-panneaux">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Water Storage Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesStockage')">
+      <div class="panel-icon">💧</div>
+      <div>Stockage d'Eau</div>
+    </div>
+    <div id="DonnéesStockage" class="panel-content">
+      <div class="status-card">
+        <div class="status-icon">📊</div>
+        <div class="status-info">
+          <div class="status-label">Niveau d'eau</div>
+          <div class="status-value" id="niveau-eau">--</div>
+        </div>
+      </div>
+      <div id="alerte-niveau-eau" class="alert" style="display:none;"></div>
+    </div>
+
+    <!-- Maintenance Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesMaintenance')">
+      <div class="panel-icon">🛠️</div>
+      <div>Maintenance et Sécurité</div>
+    </div>
+    <div id="DonnéesMaintenance" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">⏱️</div>
+          <div class="status-info">
+            <div class="status-label">Heures fonctionnement</div>
+            <div class="status-value" id="heures-fonctionnement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">⚠️</div>
+          <div class="status-info">
+            <div class="status-label">Alertes</div>
+            <div class="status-value" id="alertes">Aucune</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔗</div>
+          <div class="status-info">
+            <div class="status-label">Connexions</div>
+            <div class="status-value" id="etat-connexions">OK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Communication Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesCommunication')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">📡</div>
       <div>Communication IoT</div>
     </div>
     <div id="DonnéesCommunication" class="panel-content">
@@ -676,6 +783,36 @@
         </div>
       </div>
       <div id="log">📡 En attente de données MQTT...</div>
+    </div>
+
+    <!-- System Stats Card -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-chart-bar"></i>
+        <h2>Statistiques du Système</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-sun" style="color: gold; font-size: 2rem;"></i>
+          <div class="stat-value" id="puissance-value">--</div>
+          <div class="stat-label">Production Solaire</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-bolt" style="color: orange; font-size: 2rem;"></i>
+          <div class="stat-value" id="consommation-value">--</div>
+          <div class="stat-label">Consommation</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-tint" style="color: blue; font-size: 2rem;"></i>
+          <div class="stat-value" id="debit-value">--</div>
+          <div class="stat-label">Débit d'eau</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-clock" style="color: purple; font-size: 2rem;"></i>
+          <div class="stat-value" id="heures-value">--</div>
+          <div class="stat-label">Heures de fonctionnement</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -733,6 +870,7 @@
       
       slider.addEventListener('input', function() {
         valueDisplay.textContent = this.value + '%';
+        sendMotorCommand('speed:' + this.value);
       });
       
       // Add flash animation for emergency button
@@ -768,6 +906,26 @@
             if (element) {
               element.textContent = payload;
               
+              // Update summary values in header
+              if (key === "batterie") {
+                document.getElementById("batterie-value").textContent = payload;
+              }
+              if (key === "ensoleillement") {
+                document.getElementById("ensoleillement-value").textContent = payload;
+              }
+              if (key === "puissance") {
+                document.getElementById("puissance-value").textContent = payload;
+              }
+              if (key === "consommation") {
+                document.getElementById("consommation-value").textContent = payload;
+              }
+              if (key === "debit") {
+                document.getElementById("debit-value").textContent = payload;
+              }
+              if (key === "heuresFonctionnement") {
+                document.getElementById("heures-value").textContent = payload;
+              }
+              
               // Apply conditional formatting
               if (key === "batterie" || key === "niveauEau") {
                 const numericValue = parseFloat(payload);
@@ -800,6 +958,11 @@
               // Update pump status icon
               if (key === "status") {
                 updatePumpStatus(payload);
+              }
+              
+              // Handle alert messages
+              if (key === "alertes" && payload !== "Aucune") {
+                showAlert(`⚠️ ${payload}`, "alert-danger");
               }
               
               // Handle schedule updates
@@ -908,185 +1071,3 @@
       const logDiv = document.getElementById("log");
       logDiv.textContent = text + "\n" + logDiv.textContent;
     }
-
-    function togglePanel(panelId, forceOpen = false) {
-      const panel = document.getElementById(panelId);
-      if (forceOpen) {
-        panel.style.display = "block";
-      } else {
-        panel.style.display = panel.style.display === "none" ? "block" : "none";
-      }
-    }
-
-    function showAlert(message, type) {
-      const alertDiv = document.createElement("div");
-      alertDiv.className = `alert ${type}`;
-      alertDiv.innerHTML = `<span>${type === 'alert-danger' ? '⚠️' : '❗'}</span> ${message}`;
-      
-      const alertsContainer = document.getElementById("DonnéesMaintenance") || document.body;
-      alertsContainer.insertBefore(alertDiv, alertsContainer.firstChild);
-      
-      // Remove alert after 5 seconds
-      setTimeout(() => {
-        alertDiv.remove();
-      }, 5000);
-    }
-
-    // Schedule Control Functions
-    function loadSchedules() {
-      // Load from localStorage or initialize empty array
-      const savedSchedules = localStorage.getItem('pumpSchedules');
-      if (savedSchedules) {
-        schedules = JSON.parse(savedSchedules);
-      } else {
-        schedules = [];
-      }
-      renderSchedules();
-    }
-
-    function saveSchedules() {
-      localStorage.setItem('pumpSchedules', JSON.stringify(schedules));
-      // Send to MQTT broker if connected
-      if (mqttClient && mqttClient.isConnected()) {
-        const msg = new Paho.Message(JSON.stringify(schedules));
-        msg.destinationName = mqttConfig.topics.schedule;
-        mqttClient.send(msg);
-      }
-    }
-
-    function renderSchedules() {
-      const container = document.getElementById('schedule-container');
-      container.innerHTML = '';
-      
-      if (schedules.length === 0) {
-        container.innerHTML = '<p>Aucune programmation configurée</p>';
-        return;
-      }
-      
-      schedules.forEach((schedule, index) => {
-        const scheduleItem = document.createElement('div');
-        scheduleItem.className = 'schedule-item';
-        scheduleItem.innerHTML = `
-          <div>
-            <div class="schedule-day-selector">
-              ${['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, i) => `
-                <div class="day-chip ${schedule.days.includes(i) ? 'active' : ''}" 
-                     onclick="toggleScheduleDay(${index}, ${i})">${day}</div>
-              `).join('')}
-            </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <div>
-                <label>Début</label>
-                <input type="time" class="time-input" value="${schedule.startTime}" 
-                       onchange="updateScheduleTime(${index}, 'startTime', this.value)">
-              </div>
-              <div>
-                <label>Fin</label>
-                <input type="time" class="time-input" value="${schedule.endTime}" 
-                       onchange="updateScheduleTime(${index}, 'endTime', this.value)">
-              </div>
-              <div>
-                <label>Actif</label>
-                <input type="checkbox" ${schedule.active ? 'checked' : ''} 
-                       onchange="toggleScheduleActive(${index}, this.checked)">
-              </div>
-            </div>
-          </div>
-          <div class="schedule-controls">
-            <button class="btn btn-danger" onclick="removeSchedule(${index})">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        `;
-        container.appendChild(scheduleItem);
-      });
-    }
-
-    function addNewSchedule() {
-      schedules.push({
-        days: [0, 1, 2, 3, 4], // Monday to Friday by default
-        startTime: '08:00',
-        endTime: '17:00',
-        active: true
-      });
-      saveSchedules();
-      renderSchedules();
-    }
-
-    function removeSchedule(index) {
-      schedules.splice(index, 1);
-      saveSchedules();
-      renderSchedules();
-    }
-
-    function toggleScheduleDay(scheduleIndex, dayIndex) {
-      const dayPos = schedules[scheduleIndex].days.indexOf(dayIndex);
-      if (dayPos === -1) {
-        schedules[scheduleIndex].days.push(dayIndex);
-      } else {
-        schedules[scheduleIndex].days.splice(dayPos, 1);
-      }
-      saveSchedules();
-      renderSchedules();
-    }
-
-    function updateScheduleTime(scheduleIndex, field, value) {
-      schedules[scheduleIndex][field] = value;
-      saveSchedules();
-    }
-
-    function toggleScheduleActive(scheduleIndex, active) {
-      schedules[scheduleIndex].active = active;
-      saveSchedules();
-    }
-
-    function startScheduleChecker() {
-      // Clear any existing interval
-      if (scheduleCheckInterval) {
-        clearInterval(scheduleCheckInterval);
-      }
-      
-      // Check schedules every minute
-      scheduleCheckInterval = setInterval(checkSchedules, 60000);
-      
-      // Also check immediately
-      checkSchedules();
-    }
-
-    function checkSchedules() {
-      const now = new Date();
-      const currentDay = now.getDay(); // 0 (Sunday) to 6 (Saturday)
-      const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
-                         now.getMinutes().toString().padStart(2, '0');
-      
-      // Find active schedules for today
-      const activeSchedules = schedules.filter(schedule => {
-        return schedule.active && 
-               schedule.days.includes(currentDay) &&
-               currentTime >= schedule.startTime && 
-               currentTime < schedule.endTime;
-      });
-      
-      if (activeSchedules.length > 0) {
-        // If pump is not already running, start it
-        const pumpStatus = document.getElementById('status').textContent;
-        if (pumpStatus !== 'on' && pumpStatus !== 'ON') {
-          sendMotorCommand('on');
-          logMessage(`⏰ Programmation activée - Démarrage de la pompe`);
-        }
-      } else {
-        // If pump is running but shouldn't be according to schedule, stop it
-        const pumpStatus = document.getElementById('status').textContent;
-        if (pumpStatus === 'on' || pumpStatus === 'ON') {
-          // Check if there's any manual override in place
-          const manualOverride = localStorage.getItem('manualOverride');
-          if (!manualOverride) {
-            sendMotorCommand('off');
-            logMessage(`⏰ Programmation terminée - Arrêt de la pompe`);
-          }
-        }
-      }
-    }
-  </script>
-</body>
-</html>
