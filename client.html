@@ -7,18 +7,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
   <style>
-:root {
-  --primary: #00695c;         /* Teal green - natural/clean */
-  --secondary: #fbc02d;       /* Bright sun yellow */
-  --accent: #43a047;          /* Lush green - growth/renewable */
-  --danger: #e53935;
-  --warning: #fdd835;         /* Solar warning yellow */
-  --light: #f1f8e9;           /* Light green background */
-  --dark: #1b5e20;
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --border-color: #c5e1a5;
-}
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --accent: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light: #ecf0f1;
+      --dark: #1a252f;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --border-color: #ddd;
+    }
     
     * {
       margin: 0;
@@ -27,10 +27,13 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-body {
-  background: linear-gradient(135deg, #f1f8e9, #fffde7);
-  color: #2e7d32; /* deep green text */
-}
+    body {
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      color: #333;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -734,13 +737,13 @@ body {
       
       // Add flash animation for emergency button
       const style = document.createElement('style');
-      style.innerHTML = `
+      style.innerHTML = 
         @keyframes flash {
           0% { background-color: var(--danger); }
           50% { background-color: #ff6b6b; }
           100% { background-color: var(--danger); }
         }
-      `;
+      ;
       document.head.appendChild(style);
     });
 
@@ -782,7 +785,7 @@ body {
                 const numericValue = parseFloat(payload);
                 if (numericValue > 60) {
                   updateStatus(key, payload + "°C", "critical");
-                  showAlert(`⚠️ Température élevée: ${payload}°C`, "alert-danger");
+                  showAlert(⚠️ Température élevée: ${payload}°C, "alert-danger");
                 } else if (numericValue > 45) {
                   updateStatus(key, payload + "°C", "warning");
                 } else {
@@ -812,7 +815,7 @@ body {
           }
         }
 
-        logMessage(`📥 ${timestamp} — [${topic}]: ${payload}`);
+        logMessage(📥 ${timestamp} — [${topic}]: ${payload});
       };
 
       mqttClient.connect({
@@ -879,7 +882,7 @@ body {
       msg.destinationName = mqttConfig.topics.status;
       mqttClient.send(msg);
       const timestamp = new Date().toLocaleTimeString();
-      logMessage(`📤 ${timestamp} — Commande envoyée: "${command}" à ${mqttConfig.topics.status}`);
+      logMessage(📤 ${timestamp} — Commande envoyée: "${command}" à ${mqttConfig.topics.status});
     };
 
     function emergencyStop() {
@@ -917,8 +920,8 @@ body {
 
     function showAlert(message, type) {
       const alertDiv = document.createElement("div");
-      alertDiv.className = `alert ${type}`;
-      alertDiv.innerHTML = `<span>${type === 'alert-danger' ? '⚠️' : '❗'}</span> ${message}`;
+      alertDiv.className = alert ${type};
+      alertDiv.innerHTML = <span>${type === 'alert-danger' ? '⚠️' : '❗'}</span> ${message};
       
       const alertsContainer = document.getElementById("DonnéesMaintenance") || document.body;
       alertsContainer.insertBefore(alertDiv, alertsContainer.firstChild);
@@ -963,13 +966,13 @@ body {
       schedules.forEach((schedule, index) => {
         const scheduleItem = document.createElement('div');
         scheduleItem.className = 'schedule-item';
-        scheduleItem.innerHTML = `
+        scheduleItem.innerHTML = 
           <div>
             <div class="schedule-day-selector">
-              ${['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, i) => `
+              ${['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, i) => 
                 <div class="day-chip ${schedule.days.includes(i) ? 'active' : ''}" 
                      onclick="toggleScheduleDay(${index}, ${i})">${day}</div>
-              `).join('')}
+              ).join('')}
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
               <div>
@@ -994,7 +997,7 @@ body {
               <i class="fas fa-trash"></i>
             </button>
           </div>
-        `;
+        ;
         container.appendChild(scheduleItem);
       });
     }
@@ -1069,7 +1072,7 @@ body {
         const pumpStatus = document.getElementById('status').textContent;
         if (pumpStatus !== 'on' && pumpStatus !== 'ON') {
           sendMotorCommand('on');
-          logMessage(`⏰ Programmation activée - Démarrage de la pompe`);
+          logMessage(⏰ Programmation activée - Démarrage de la pompe);
         }
       } else {
         // If pump is running but shouldn't be according to schedule, stop it
@@ -1079,11 +1082,11 @@ body {
           const manualOverride = localStorage.getItem('manualOverride');
           if (!manualOverride) {
             sendMotorCommand('off');
-            logMessage(`⏰ Programmation terminée - Arrêt de la pompe`);
+            logMessage(⏰ Programmation terminée - Arrêt de la pompe);
           }
         }
       }
     }
   </script>
 </body>
-</html>
+</html> 
