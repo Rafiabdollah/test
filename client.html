@@ -11,7 +11,7 @@
       --primary: #2c3e50;
       --secondary: #3498db;
       --accent: #2ecc71;
-      --danger: #e74c3c;
+      --danger: #e74c3c;  
       --warning: #f39c12;
       --light: #ecf0f1;
       --dark: #1a252f;
@@ -528,7 +528,7 @@
         </div>
       </div>
       
-      <!-- Status Card -->
+     <!-- Status Card -->
       <div class="card">
         <div class="card-header">
           <i class="fas fa-info-circle"></i>
@@ -572,15 +572,15 @@
       </button>
     </div>
 
-    <!-- Data Panels -->
+    <!-- Electrical Data Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesÉlectriques')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">⚡</div>
       <div>Données Électriques</div>
     </div>
     <div id="DonnéesÉlectriques" class="panel-content">
       <div class="grid-container">
         <div class="status-card">
-          <div class="status-icon">⚡</div>
+          <div class="status-icon">🔌</div>
           <div class="status-info">
             <div class="status-label">Tension</div>
             <div class="status-value" id="tension">--</div>
@@ -610,14 +610,15 @@
       </div>
     </div>
     
+    <!-- Pump Performance Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesPompe')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">💧</div>
       <div>Performances de la Pompe</div>
     </div>
     <div id="DonnéesPompe" class="panel-content">
       <div class="grid-container">
         <div class="status-card">
-          <div class="status-icon">💧</div>
+          <div class="status-icon">🚰</div>
           <div class="status-info">
             <div class="status-label">Débit d'eau</div>
             <div class="status-value" id="debit">--</div>
@@ -640,15 +641,94 @@
         <div class="status-card">
           <div class="status-icon">🔄</div>
           <div class="status-info">
-            <div class="status-label">État</div>
+            <div class="status-label">État Pompe</div>
             <div class="status-value" id="etat-pompe">--</div>
           </div>
         </div>
       </div>
     </div>
     
+    <!-- Solar Data Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesSolaires')">
+      <div class="panel-icon">☀️</div>
+      <div>Données Solaires</div>
+    </div>
+    <div id="DonnéesSolaires" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">🌞</div>
+          <div class="status-info">
+            <div class="status-label">Ensoleillement</div>
+            <div class="status-value" id="ensoleillement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🌡️</div>
+          <div class="status-info">
+            <div class="status-label">Temp. ambiante</div>
+            <div class="status-value" id="temp-ambiante">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🛠️</div>
+          <div class="status-info">
+            <div class="status-label">État panneaux</div>
+            <div class="status-value" id="etat-panneaux">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Water Storage Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesStockage')">
+      <div class="panel-icon">💧</div>
+      <div>Stockage d'Eau</div>
+    </div>
+    <div id="DonnéesStockage" class="panel-content">
+      <div class="status-card">
+        <div class="status-icon">📊</div>
+        <div class="status-info">
+          <div class="status-label">Niveau d'eau</div>
+          <div class="status-value" id="niveau-eau">--</div>
+        </div>
+      </div>
+      <div id="alerte-niveau-eau" class="alert" style="display:none;"></div>
+    </div>
+
+    <!-- Maintenance Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesMaintenance')">
+      <div class="panel-icon">🛠️</div>
+      <div>Maintenance et Sécurité</div>
+    </div>
+    <div id="DonnéesMaintenance" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">⏱️</div>
+          <div class="status-info">
+            <div class="status-label">Heures fonctionnement</div>
+            <div class="status-value" id="heures-fonctionnement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">⚠️</div>
+          <div class="status-info">
+            <div class="status-label">Alertes</div>
+            <div class="status-value" id="alertes">Aucune</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔗</div>
+          <div class="status-info">
+            <div class="status-label">Connexions</div>
+            <div class="status-value" id="etat-connexions">OK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Communication Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesCommunication')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">📡</div>
       <div>Communication IoT</div>
     </div>
     <div id="DonnéesCommunication" class="panel-content">
@@ -677,7 +757,7 @@
       </div>
       <div id="log">📡 En attente de données MQTT...</div>
     </div>
-  </div>
+
 
   <script>
     // Configuration MQTT
