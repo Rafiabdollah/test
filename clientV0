@@ -11,7 +11,7 @@
       --primary: #2c3e50;
       --secondary: #3498db;
       --accent: #2ecc71;
-      --danger: #e74c3c;
+      --danger: #e74c3c;  
       --warning: #f39c12;
       --light: #ecf0f1;
       --dark: #1a252f;
@@ -396,7 +396,34 @@
       margin-top: 10px;
       width: 100%;
     }
+    
+     /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
 
+    .stat-card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin: 10px 0;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
     /* Animation for critical values */
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -455,6 +482,14 @@
         justify-content: flex-end;
       }
     }
+    footer {
+  background: var(--earth-brown);
+  color: var(--text-light);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
   </style>
 </head>
 <body>
@@ -528,7 +563,7 @@
         </div>
       </div>
       
-      <!-- Status Card -->
+     <!-- Status Card -->
       <div class="card">
         <div class="card-header">
           <i class="fas fa-info-circle"></i>
@@ -572,15 +607,15 @@
       </button>
     </div>
 
-    <!-- Data Panels -->
+    <!-- Electrical Data Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesÉlectriques')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">⚡</div>
       <div>Données Électriques</div>
     </div>
     <div id="DonnéesÉlectriques" class="panel-content">
       <div class="grid-container">
         <div class="status-card">
-          <div class="status-icon">⚡</div>
+          <div class="status-icon">🔌</div>
           <div class="status-info">
             <div class="status-label">Tension</div>
             <div class="status-value" id="tension">--</div>
@@ -610,14 +645,15 @@
       </div>
     </div>
     
+    <!-- Pump Performance Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesPompe')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">💧</div>
       <div>Performances de la Pompe</div>
     </div>
     <div id="DonnéesPompe" class="panel-content">
       <div class="grid-container">
         <div class="status-card">
-          <div class="status-icon">💧</div>
+          <div class="status-icon">🚰</div>
           <div class="status-info">
             <div class="status-label">Débit d'eau</div>
             <div class="status-value" id="debit">--</div>
@@ -640,15 +676,94 @@
         <div class="status-card">
           <div class="status-icon">🔄</div>
           <div class="status-info">
-            <div class="status-label">État</div>
+            <div class="status-label">État Pompe</div>
             <div class="status-value" id="etat-pompe">--</div>
           </div>
         </div>
       </div>
     </div>
     
+    <!-- Solar Data Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesSolaires')">
+      <div class="panel-icon">☀️</div>
+      <div>Données Solaires</div>
+    </div>
+    <div id="DonnéesSolaires" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">🌞</div>
+          <div class="status-info">
+            <div class="status-label">Ensoleillement</div>
+            <div class="status-value" id="ensoleillement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🌡️</div>
+          <div class="status-info">
+            <div class="status-label">Temp. ambiante</div>
+            <div class="status-value" id="temp-ambiante">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🛠️</div>
+          <div class="status-info">
+            <div class="status-label">État panneaux</div>
+            <div class="status-value" id="etat-panneaux">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Water Storage Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesStockage')">
+      <div class="panel-icon">💧</div>
+      <div>Stockage d'Eau</div>
+    </div>
+    <div id="DonnéesStockage" class="panel-content">
+      <div class="status-card">
+        <div class="status-icon">📊</div>
+        <div class="status-info">
+          <div class="status-label">Niveau d'eau</div>
+          <div class="status-value" id="niveau-eau">--</div>
+        </div>
+      </div>
+      <div id="alerte-niveau-eau" class="alert" style="display:none;"></div>
+    </div>
+
+    <!-- Maintenance Panel -->
+    <div class="panel-header" onclick="togglePanel('DonnéesMaintenance')">
+      <div class="panel-icon">🛠️</div>
+      <div>Maintenance et Sécurité</div>
+    </div>
+    <div id="DonnéesMaintenance" class="panel-content">
+      <div class="grid-container">
+        <div class="status-card">
+          <div class="status-icon">⏱️</div>
+          <div class="status-info">
+            <div class="status-label">Heures fonctionnement</div>
+            <div class="status-value" id="heures-fonctionnement">--</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">⚠️</div>
+          <div class="status-info">
+            <div class="status-label">Alertes</div>
+            <div class="status-value" id="alertes">Aucune</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon">🔗</div>
+          <div class="status-info">
+            <div class="status-label">Connexions</div>
+            <div class="status-value" id="etat-connexions">OK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Communication Panel -->
     <div class="panel-header" onclick="togglePanel('DonnéesCommunication')">
-      <div class="panel-icon">📊</div>
+      <div class="panel-icon">📡</div>
       <div>Communication IoT</div>
     </div>
     <div id="DonnéesCommunication" class="panel-content">
@@ -677,8 +792,42 @@
       </div>
       <div id="log">📡 En attente de données MQTT...</div>
     </div>
+   <!-- System Stats Card -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-chart-bar"></i>
+        <h2>Statistiques du Système</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-sun" style="color: gold; font-size: 2rem;"></i>
+          <div class="stat-value" id="puissance-value">--</div>
+          <div class="stat-label">Production Solaire</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-bolt" style="color: orange; font-size: 2rem;"></i>
+          <div class="stat-value" id="consommation-value">--</div>
+          <div class="stat-label">Consommation</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-tint" style="color: blue; font-size: 2rem;"></i>
+          <div class="stat-value" id="debit-value">--</div>
+          <div class="stat-label">Débit d'eau</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-clock" style="color: purple; font-size: 2rem;"></i>
+          <div class="stat-value" id="heures-value">--</div>
+          <div class="stat-label">Heures de fonctionnement</div>
+        </div>
+      </div>
+    </div>
   </div>
-
+  
+<footer>
+  <p>&copy; 2025 RAFI ROBOTIQUE • Énergie propre pour un avenir durable.</p>
+  <p><em>"L'énergie du soleil, au service de la terre."</em></p>
+</footer>
+  
   <script>
     // Configuration MQTT
     const mqttConfig = {
@@ -705,7 +854,8 @@
         etatReseau: "vfd/etat_reseau",
         latence: "vfd/latence",
         misesAJour: "vfd/mises_a_jour",
-        schedule: "vfd/schedule"
+        schedule: "vfd/schedule",
+        Speedinput: "vfd/Speedinput",
       }
     };
 
@@ -733,6 +883,7 @@
       
       slider.addEventListener('input', function() {
         valueDisplay.textContent = this.value + '%';
+        sendMotorCommand('Speedinput:' + this.value);
       });
       
       // Add flash animation for emergency button
@@ -800,6 +951,10 @@
               // Update pump status icon
               if (key === "status") {
                 updatePumpStatus(payload);
+              }
+              // Handle alert messages
+              if (key === "alertes" && payload !== "Aucune") {
+                showAlert(`⚠️ ${payload}`, "alert-danger");
               }
               
               // Handle schedule updates
