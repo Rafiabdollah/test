@@ -60,9 +60,10 @@
 
 <h3 style="cursor:pointer; color:#2c3e50;" onclick="toggleDonnéesÉlectriques()">📊 Voir les données Électriques</h3>
 <div id="DonnéesÉlectriques" style="display:none; padding:15px; background:#fefefe; border:1px solid #ccc; border-radius:8px;">
-    <p>🌡️ Temperature: <span id="temperature">--</span> °C</p>
-    <p>⚙️ Speed: <span id="speed">--</span> RPM</p>
-    <p>🔌 Status: <span id="status">--</span></p>
+    <p> Tension : <span id="Tension">--</span> °C</p>
+    <p> Puissance générée : <span id="Puissance">--</span> RPM</p>
+    <p> État de la batterie : <span id="batterie">--</span></p>
+    <p> Consommation électrique : <span id="Consommation">--</span></p>
 </div>
   
   <script>
@@ -95,8 +96,16 @@
           document.getElementById("speed").innerText = payload;
         } else if (topic === "vfd/status") {
           document.getElementById("status").innerText = payload;
+        } else if (topic === "vfd/status") {
+          document.getElementById("Tension").innerText = payload;
+        } else if (topic === "vfd/Tension") {
+          document.getElementById("Puissance").innerText = payload;
+        } else if (topic === "vfd/status") {
+          document.getElementById("batterie").innerText = payload;
+        } else if (topic === "vfd/Consommation") {
+          document.getElementById("Consommation").innerText = payload;
         }
-
+        
         logMessage(`📥 ${timestamp} — [${topic}]: ${payload}`);
       };
 
