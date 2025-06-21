@@ -462,7 +462,7 @@
     <header>
       <div class="logo">
         <i class="fas fa-water"></i>
-        <h1>POMPE SOLAIRE <span>CONTROLE</span></h1>
+        <h1>POMPE SOLAIRE <span>CONTROLE/SUPERVISION</span></h1>
       </div>
       <div class="status-indicators">
         <div class="indicator active">
@@ -503,6 +503,9 @@
           <button class="btn btn-danger" onclick="emergencyStop()">
             <i class="fas fa-exclamation-triangle"></i> Arrêt d'urgence
           </button>
+          <button class="btn" onclick="setAutoMode()">
+            <i class="fas fa-cog"></i> Auto
+          </button>
         </div>
       </div>
       
@@ -520,9 +523,6 @@
           <div class="control-row">
             <button class="btn btn-primary" onclick="setMaxPower()">
               <i class="fas fa-bolt"></i> Puissance Max
-            </button>
-            <button class="btn" onclick="setAutoMode()">
-              <i class="fas fa-cog"></i> Auto
             </button>
           </div>
         </div>
