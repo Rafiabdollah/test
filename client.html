@@ -177,6 +177,10 @@
         logDiv.textContent = text + "\n" + logDiv.textContent;
       }
     };
+    function toggleDetails() {
+  const panel = document.getElementById("detailsPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
   </script>
 </body>
 </html>
